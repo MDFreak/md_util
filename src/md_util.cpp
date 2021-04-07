@@ -1,10 +1,10 @@
 #include <md_util.h>
 #include <wire.h>
-
+#include <dict_list.hpp>
 
 // TwoWire I2Cone = TwoWire(0);
 // TwoWire I2Ctwo = TwoWire(1);
-//#define _MT_UTIL_DEBUG
+#define MD_UTIL_DEBUG  CFG_DEBUG_STARTUP
 
 //--------------------------
 // Setzen / Loeschen eines Bit in einer 16-Bit Flags-Wort
@@ -38,27 +38,50 @@ uint16_t setBit(const uint16_t inWert, const uint16_t inBit, const bool inVal, b
 
 //--------------------------
 // scan I2C - serial output
-uint8_t scanI2C(uint8_t no, uint8_t start, uint8_t sda, uint8_t scl, bool _debug)
+uint8_t scanI2C(uint8_t no, uint8_t _start, uint8_t _stop, uint8_t sda, uint8_t scl)
   {
+    dict_list devlist;
+
     uint8_t i = 0;
-    TwoWire I2C = TwoWire(no-1);
-    I2C.begin(sda,scl,400000);
-    SOUTLN();
-    SOUT("Scanning I2C Addresses Channel "); SOUTLN(no);
-    //uint8_t cnt=0;
-    for(i = start; i < 128 ; i++)
+    if (no > 0)
       {
-        I2C.beginTransmission(i);
-        uint8_t ec=I2C.endTransmission(true);
-        if(ec==0)
+        TwoWire I2C = TwoWire(no-1);
+        I2C.begin(sda,scl,400000);
+        #if (MD_UTIL_DEBUG > CFG_DEBUG_NONE)
+            SOUTLN();
+            SOUT("Scanning I2C Addresses Channel "); SOUTLN(no);
+          #endif
+        //uint8_t cnt=0;
+        for(i = _start; i < _stop ; i++)
           {
-            SOUT(" device at address 0x");
-            if (i<16) Serial.print('0');
-            SOUTHEXLN(i);
+            I2C.beginTransmission(i);
+            uint8_t ec=I2C.endTransmission(true);
+            if(ec==0)
+              {
+                #if (MD_UTIL_DEBUG > CFG_DEBUG_NONE)
+                    SOUT(" device at address 0x");
+                    if (i<16) Serial.print('0');
+                    SOUTHEX(i); SOUT(" - ");
+                    switch (i)
+                      {
+                        case I2C_OLED:     SOUTLN("OLED"); break;
+                        case I2C_FRAM:     SOUTLN("FRAM"); break;
+                        case I2C_BME280:   SOUTLN("BME280"); break;
+                        case I2C_FRAM_ALT: SOUTLN("FRAM old addr"); break;
+                        //case I2C_???: SOUTLN("???"); break;
+                        //case I2C_???: SOUTLN("???"); break;
+                        default:           SOUTLN("unknown device"); break;
+                      }
+                  #endif
+              }
           }
+        I2C.~TwoWire();
+        Serial.println();
       }
-    I2C.~TwoWire();
-    Serial.println();
+    else
+      {
+        SOUTLN("I2C device ID=0 is not allowed");
+      }
     return i;
   }
 

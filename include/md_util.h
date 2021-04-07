@@ -10,7 +10,7 @@
   char*    getBinStr(char* pstr, uint8_t val, bool _debug = FALSE);
   char*    getBinStr(char* pstr, uint16_t val, bool _debug = FALSE);
 
-  uint8_t  scanI2C(uint8_t no, uint8_t start, uint8_t sda, uint8_t scl, bool _debug = FALSE);
+  uint8_t  scanI2C(uint8_t no, uint8_t start, uint8_t _stop, uint8_t sda, uint8_t scl);
   class msTimer
     {
       private:
