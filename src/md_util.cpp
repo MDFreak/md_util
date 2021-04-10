@@ -2,8 +2,6 @@
 #include <wire.h>
 #include <dict_list.hpp>
 
-// TwoWire I2Cone = TwoWire(0);
-// TwoWire I2Ctwo = TwoWire(1);
 #define MD_UTIL_DEBUG  CFG_DEBUG_STARTUP
 
 //--------------------------
@@ -64,10 +62,11 @@ uint8_t scanI2C(uint8_t no, uint8_t _start, uint8_t _stop, uint8_t sda, uint8_t 
                     SOUTHEX(i); SOUT(" - ");
                     switch (i)
                       {
-                        case I2C_OLED:     SOUTLN("OLED"); break;
-                        case I2C_FRAM:     SOUTLN("FRAM"); break;
+                        case I2C_OLED_3C:  SOUTLN("OLED"); break;
+                        case I2C_OLED_3D:  SOUTLN("OLED"); break;
+                        case I2C_FRAM_50:  SOUTLN("FRAM"); break;
                         case I2C_BME280:   SOUTLN("BME280"); break;
-                        case I2C_FRAM_ALT: SOUTLN("FRAM old addr"); break;
+                        case I2C_FRAM_7C:  SOUTLN("FRAM old addr"); break;
                         //case I2C_???: SOUTLN("???"); break;
                         //case I2C_???: SOUTLN("???"); break;
                         default:           SOUTLN("unknown device"); break;

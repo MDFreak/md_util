@@ -108,8 +108,9 @@
           #define  MC_ESP_DUAL      0x0008 // dual core controller
           #define  MC_ESP32S_Node   0x0000 +               MC_PW_3V3 + MC_UC_ESP32 + MC_MOD_SYS
           #define  MC_ESP32_Node    0x0001 + MC_ESP_DUAL + MC_PW_3V3 + MC_UC_ESP32 + MC_MOD_SYS
-          #define  MC_ESP32_D1_R32  0x0002 +               MC_PW_3V3 + MC_UC_ESP32 + MC_MOD_SYS
+          #define  MC_ESP32_D1_R32  0x0002 +               MC_PW_3V3 + MC_UC_ESP32 + MC_MOD_SYS // UNO compatible
           #define  MC_ESP32_LORA    0x0003 + MC_ESP_DUAL + MC_PW_3V3 + MC_UC_ESP32 + MC_MOD_SYS
+          #define  MC_ESP32_D1_MINI 0x0004 + MC_ESP_DUAL + MC_PW_3V3 + MC_UC_ESP32 + MC_MOD_SYS // UNO compatible
       //
       // --- displays
         // --- TFT displays
@@ -118,15 +119,19 @@
           #define  MC_UO_TOUCHXPT2046_AZ  0x0002 + MC_MOD_UOUT + MC_PW_3V3 // used by Arduino-touch-case
         //
         // --- OLED displays
-          #define  MC_UO_OLED_091_AZ      0x0008 + MC_MOD_UOUT + MC_PW_3V3 // IIC adress 0x3C
+          #define  MC_UO_OLED_066         0x0008 + MC_MOD_UOUT + MC_PW_3V3 // IIC adress 0x3C,0x3D solder switch
+            #define OLED_066_MAXCOLS      12  // ??
+            #define OLED_066_MAXROWS      4
+
+          #define  MC_UO_OLED_091_AZ      0x0009 + MC_MOD_UOUT + MC_PW_3V3 // IIC adress 0x3C
             #define OLED_091_MAXCOLS      20
             #define OLED_091_MAXROWS      4
 
-          #define  MC_UO_OLED_096_AZ      0x0008 + MC_MOD_UOUT + MC_PW_3V3
+          #define  MC_UO_OLED_096_AZ      0x000A + MC_MOD_UOUT + MC_PW_3V3
             #define OLED_096_MAXCOLS      20
             #define OLED_096_MAXROWS      6
 
-          #define  MC_UO_OLED_130_AZ      0x0008 + MC_MOD_UOUT + MC_PW_3V3
+          #define  MC_UO_OLED_130_AZ      0x000B + MC_MOD_UOUT + MC_PW_3V3
             #define OLED_130_MAXCOLS      20
             #define OLED_130_MAXROWS      6
       //
@@ -144,11 +149,12 @@
       // --- I2C devices
           #define  I2C1                     1           // I2C device 1
           #define  I2C2                     2           // I2C device 2
-          #define  I2C_TFT1602_IIC_XA_3V3   U_3V3  + 0
-          #define  I2C_OLED                 0x3C
-          #define  I2C_FRAM                 0x50
+          //#define  I2C_TFT1602_IIC_XA_3V3   U_3V3  + 0
+          #define  I2C_OLED_3C              0x3C
+          #define  I2C_OLED_3D              0x3D
+          #define  I2C_FRAM_50              0x50
           #define  I2C_BME280               0x76
-          #define  I2C_FRAM_ALT             0x7C
+          #define  I2C_FRAM_7C              0x7C
           #define  I2C_DEV_NN               0xFF
       //
       // --- music defines
