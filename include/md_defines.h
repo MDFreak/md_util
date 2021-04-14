@@ -119,6 +119,9 @@
           #define  MC_UO_TOUCHXPT2046_AZ  0x0002 + MC_MOD_UOUT + MC_PW_3V3 // used by Arduino-touch-case
         //
         // --- OLED displays
+          #define  OLED_DRV_1106          1106
+          #define  OLED_DRV_1306          1306
+
           #define  MC_UO_OLED_066         0x0008 + MC_MOD_UOUT + MC_PW_3V3 // IIC adress 0x3C,0x3D solder switch
             #define OLED_066_MAXCOLS      12  // ??
             #define OLED_066_MAXROWS      4

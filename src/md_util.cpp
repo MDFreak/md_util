@@ -3,6 +3,7 @@
 #include <dict_list.hpp>
 
 #define MD_UTIL_DEBUG  CFG_DEBUG_STARTUP
+//#define MD_UTIL_DEBUG  CFG_DEBUG_DETAILS
 
 //--------------------------
 // Setzen / Loeschen eines Bit in einer 16-Bit Flags-Wort
@@ -239,4 +240,86 @@ void touchPin::read()
       }
             //SOUT(" _state "); SOUT(_state); SOUT(" _cnt "); SOUT(_cnt);
             //SOUT(" mark "); SOUT(_mark); SOUT(" toggle "); SOUTHEXLN(_toggle);
+  }
+//
+// class filterValue
+  /*---------------------------------------------------------------------
+    Berechnen eines Messwerts aus dem Analogkanal-Inhalt
+
+      Die Funktion berechnet aus dem Rohwert den skalierten Messwert
+
+      - Beim 1. Aufruf mit Mittelzahl > 1 wird eine Integration neu gestartet
+      - Fuer jeden skalierten Analogwert wird ein Ringpuffer mitgefuehrt, aus
+        dem ein gefilterter Wert mit der Funktion akt_filt_Messwert()
+        berechnet werden kann
+
+
+      Mittelzahl > 1 bedeutet:
+        Bei jedem Aufruf wird der Messwert berechnet und aufaddiert,
+        bis die Anzahl der Mittelungen erreicht ist.
+        -> das zugehoerige Flag MessAna_Fertig wird gesetzt.
+
+      Rueckgabe INT-Ergebnis
+  \*---------------------------------------------------------------------*/
+
+filterValue::filterValue(uint8_t filtAnz)
+  {
+    _maxFilt = 1;
+    if (filtAnz > 1) { _maxFilt = filtAnz; }
+    _pVal = new uint32_t[filtAnz+1];
+    clear();
+  }
+
+filterValue::~filterValue()
+  {
+    delete _pVal;
+    _pVal = NULL;
+  }
+
+void filterValue::clear()
+  {
+    for ( uint8_t i=0 ; i <= _maxFilt ; i++ )
+      {
+        _pVal[0] = 0.0;
+      }
+    _pos  = 1;
+    _filt = 0;
+  }
+
+double filterValue::calcVal(double _val)
+  {
+    double val;
+
+    if( _pos == 0 )
+      {
+        clear();
+      }
+            // bdMesswert_skalieren(&dMesswert, Analogkanal_Nr);
+            if (MD_UTIL_DEBUG > CFG_DEBUG_ACTIONS)
+              {
+                SOUT("calcVal ... "); SOUT(_filt); SOUT(" / ");  SOUT(_maxFilt); SOUT(" val= "); SOUT(val);
+                SOUT(" oldVal="); SOUT(_pVal[_pos]); SOUT(" sum="); SOUTLN(_pVal[0]);
+              }
+
+    // remove oldest value from sum
+    if (_filt < _maxFilt) { _filt++; }
+    else     { _pVal[0] -= _pVal[_pos]; }
+    // place and add new value
+    _pVal[_pos] = _val;
+    _pVal[0] += _pVal[_pos];
+            if (MD_UTIL_DEBUG > CFG_DEBUG_ACTIONS)
+              {
+                SOUT("newVal="); SOUT(_pVal[_pos]); SOUT(" sum="); SOUT(_pVal[0]);
+              }
+    // set next position
+    if (_pos < _maxFilt) { _pos++;  }
+    else                 { _pos = 1;}
+    // calc meanvalue
+    val = _pVal[0] / _filt;
+            if (MD_UTIL_DEBUG > CFG_DEBUG_ACTIONS)
+              {
+                SOUT(" filtVal="); SOUT(val); SOUT(" sum="); SOUTLN(_pVal[0]);
+              }
+
+    return val;
   }
