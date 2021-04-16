@@ -43,7 +43,6 @@
           void    setName(const char name[DICT_MAX_NAME_LEN]);
       };
 
-    //
     class dict_list : public md_list
       {
         private:

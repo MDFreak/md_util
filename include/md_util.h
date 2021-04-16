@@ -66,12 +66,13 @@
         int8_t     _maxFilt   = 1;
         uint8_t    _filt      = 0;
         uint8_t    _pos       = 0;
+        //uint8_t    _
         uint32_t*  _pVal      = NULL;  // *pVal[0] contains the filtered value
         //uint32_t   _min       = 0;
         //uint32_t   _max       = 0;
 
       public:
-        filterValue(uint8_t filtAnz);
+        filterValue(uint8_t filtAnz, uint8_t killPeek = 0);
         ~filterValue();
         double    calcVal(double   _val);
         float     calcVal(float    _val) { return ((float)    calcVal((double) _val)); }

@@ -1,5 +1,5 @@
 /*************************************************************************
-|  Filename..............: linked_list.cpp
+|  Filename..............: dict_list.cpp
  * Project...............: part of standard utilities
  * Autor.................: Martin Dorfner (MD)
  * Date .................: 20.11.2020
@@ -26,14 +26,13 @@
       setName(name);
     }
 
-  //
   void dict_cell::setName(const char name[])
     {
       memcpy(_name, name, DICT_MAX_NAME_LEN);
       _name[DICT_MAX_NAME_LEN] = 0;
     }
 
-//
+// --------------------------------
 // --- class dict_list
   dict_list::dict_list()
     {
@@ -43,26 +42,26 @@
 
   dict_list::~dict_list()
     {
-/*
-      void* pcell = NULL;
-      SOUT(millis()); SOUTLN(" dict_list del ");
-      while ((pcell = md_list::removeFirstCell()) != NULL)
-        {
-          SOUT(millis()); SOUT(" del dict_cell ");SOUTHEXLN((u_long) pcell);
-          ((dict_cell*) pcell)->~dict_cell();
-        }
-*/
+      /*
+            void* pcell = NULL;
+            SOUT(millis()); SOUTLN(" dict_list del ");
+            while ((pcell = md_list::removeFirstCell()) != NULL)
+              {
+                SOUT(millis()); SOUT(" del dict_cell ");SOUTHEXLN((u_long) pcell);
+                ((dict_cell*) pcell)->~dict_cell();
+              }
+      */
     }
 
   //
-  void dict_list::append( int16_t idx, const char name[DICT_MAX_NAME_LEN])
+  void       dict_list::append( int16_t idx, const char name[DICT_MAX_NAME_LEN])
     {
       dict_cell* neu = new dict_cell();
       //SOUT(millis());
       //SOUT(" dict_list append dict_cell "); SOUTHEX((u_long) neu);
       //SOUT("  idx "); SOUTHEX(idx); SOUT("  name "); SOUTLN(name);
       neu->init(idx, name);
-//      md_list::append(neu);
+      //      md_list::append(neu);
     }
 
   //
@@ -73,16 +72,14 @@
       return (dict_cell*) ptmp;
     }
 
-  //
   dict_cell* dict_list::getNextCellPointer( dict_cell* pCell )
     {
       void* ptmp = (void*) pCell;
-//      ptmp = (void*) md_list::getNextCellPointer( (md_cell*)(ptmp) );
+      //      ptmp = (void*) md_list::getNextCellPointer( (md_cell*)(ptmp) );
       //SOUT(millis()); SOUT(" dict_list getNextCellPointer "); SOUTHEXLN((u_long) ptmp);
       return (dict_cell*) ptmp;
     }
 
-  //
   int16_t    dict_list::getIdx (const char name[])
     {
       dict_cell* pcell = _findCell(name);
@@ -90,7 +87,6 @@
       else       return NN;
     }
 
-  //
   void       dict_list::getName(int16_t idx, char* pname)
     {
       dict_cell* pcell = _findCell(idx);
@@ -105,7 +101,6 @@
       if (pcell) pcell->setIdx(idx);
     }
 
-  //
   void       dict_list::setName(int16_t idx, const char name[])
     {
       dict_cell* pcell = _findCell(idx);
@@ -129,7 +124,6 @@
       else      return NULL;
     }
 
-  //
   dict_cell* dict_list::_findCell(const char name[])
     {
       dict_cell* pcell = _pFirst;

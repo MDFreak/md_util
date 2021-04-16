@@ -8,6 +8,7 @@
       #define NN      -1  // undefined
       #define NU      -1  // not used
       #define NC      -1  // not connected
+      #define UNDEF    0
       #define OFF      0  // not active
       #define ON       1  // active
 
@@ -16,9 +17,6 @@
 
       #define ISERR   TRUE   // function call
       #define ISOK    FALSE
-
-      #define FIRST   TRUE   // function call
-      #define LAST    FALSE
 
       #define SWITCH  TRUE
 
@@ -33,6 +31,19 @@
       #define UTC_TIMEZONE      3600           // +1 hour
       #define UTC_SUMMERTIME    1
       #define UTC_WINTERTIME    0
+
+      enum dattype_t
+        {
+          T_UNDEF = 0,
+          T_UINT8,
+          T_INT8,
+          T_UINT16,
+          T_INT16,
+          T_UINT32,
+          T_INT32,
+          T_DOUBLE,
+          T_TEXT
+        };
 
       #define DEBUG   TRUE
       #define NODEBUG FALSE

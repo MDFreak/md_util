@@ -262,7 +262,7 @@ void touchPin::read()
       Rueckgabe INT-Ergebnis
   \*---------------------------------------------------------------------*/
 
-filterValue::filterValue(uint8_t filtAnz)
+filterValue::filterValue(uint8_t filtAnz, uint8_t killPeek)
   {
     _maxFilt = 1;
     if (filtAnz > 1) { _maxFilt = filtAnz; }
@@ -298,7 +298,7 @@ double filterValue::calcVal(double _val)
             if (MD_UTIL_DEBUG > CFG_DEBUG_ACTIONS)
               {
                 SOUT("calcVal ... "); SOUT(_filt); SOUT(" / ");  SOUT(_maxFilt); SOUT(" val= "); SOUT(val);
-                SOUT(" oldVal="); SOUT(_pVal[_pos]); SOUT(" sum="); SOUTLN(_pVal[0]);
+                SOUT(" oldVal="); SOUT(_pVal[_pos]); SOUT(" sum="); SOUT(_pVal[0]); SOUT(" _pos="); SOUTLN(_pos);
               }
 
     // remove oldest value from sum

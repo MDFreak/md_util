@@ -22,11 +22,11 @@
 // class ip_cell
   ip_cell::ip_cell() : md_cell()
     {
-          //SOUT(millis()); SOUT(" ip_cell new "); SOUTHEXLN((u_long) this);
+          SOUT(millis()); SOUT(" ip_cell new "); SOUTHEXLN((u_long) this);
     }
   ip_cell::~ip_cell()
     {
-          //SOUT(millis()); SOUT(" ip_cell del me "); SOUTHEXLN((u_long) this);
+          SOUT(millis()); SOUT(" ip_cell del me "); SOUTHEXLN((u_long) this);
     }
   //
   void ip_cell::init(uint32_t locIP, uint32_t gwIP, uint32_t snIP,
@@ -38,7 +38,7 @@
       _snIP  = snIP;
       strncpy(_ssid, ssid, NET_MAX_SSID_LEN);
       strncpy(_pw, pw, NET_MAX_PW_LEN);
-                      //SOUT(millis()); SOUT(" ip_cell init _locIP "); SOUTHEX(_locIP); SOUT("  _ssid "); SOUTLN(_ssid);
+                      SOUT(millis()); SOUT(" ip_cell init _locIP "); SOUTHEX(_locIP); SOUT("  _ssid "); SOUTLN(_ssid);
     }
   //
   uint32_t ip_cell::locIP()
@@ -70,7 +70,7 @@
 //
   ip_list::ip_list() : md_list()
     {
-      //SOUT(millis()); SOUT(" ip_list new");  SOUTHEXLN((u_long) this);
+      SOUT(millis()); SOUT(" ip_list new");  SOUTHEXLN((u_long) this);
     }
 
   ip_list::~ip_list()
@@ -79,16 +79,16 @@
       void*    ptmp = NULL;
       uint16_t cnt  = this->count();
 
-                    //SOUT(millis()); SOUT(" ip_list delete me");  SOUTHEX((u_long) this);
-                	  //SOUT(" count "); SOUTLN(this->count());
+                    SOUT(millis()); SOUT(" ip_list delete me");  SOUTHEX((u_long) this);
+                	  SOUT(" count "); SOUTLN(this->count());
       while (cnt > 0)
         {
           ptmp = this->pFirst();
           pip = (ip_cell*) ptmp;
-          remove(FIRST);
+          rem(OFIRST);
           if (cnt > this->count())
             {
-                    //SOUT(" delete first "); SOUTHEXLN((u_long) pip);
+                    SOUT(" delete first "); SOUTHEXLN((u_long) pip);
               delete( (ip_cell*) pip ) ;
               cnt--;
             }
@@ -105,9 +105,9 @@
       neu->init(locIP, gwIP, snIP, ssid, pw);
       char stmp[NET_MAX_SSID_LEN];
       neu->getSSID(stmp);
-      //SOUT(millis());
-      //SOUT("  append ip_cell "); SOUTHEX((u_long) neu);
-      //SOUT("  locIP "); SOUTHEX(neu->locIP()); SOUT("  ssid "); SOUTLN(stmp);
+      SOUT(millis());
+      SOUT("  append ip_cell "); SOUTHEX((u_long) neu);
+      SOUT("  locIP "); SOUTHEX(neu->locIP()); SOUT("  ssid "); SOUTLN(stmp);
     }
 
 
