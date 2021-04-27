@@ -15,8 +15,8 @@
  *-----------------------------------------------------------------------
  * 0.1.0  |20.11.20| import from former project                 | MD
 *-----------------------------------------------------------------------*/
-
-#ifndef _DICT_LIST_HPP_
+#ifdef _DICT_LIST_HPP_
+//#ifndef _DICT_LIST_HPP_
   #define _DICT_LIST_HPP_
 
   #include <stdlib.h>

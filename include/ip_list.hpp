@@ -27,6 +27,11 @@
   #define NET_MAX_SSID_LEN 14
   #define NET_MAX_PW_LEN   14
 
+  #define MDIP_DEBUG CFG_DEBUG_NONE
+  //#define MDIP_DEBUG CFG_DEBUG_STARTUP
+  //#define MDIP_DEBUG CFG_DEBUG_ACTIONS
+  //#define MDIP_DEBUG CFG_DEBUG_DETAILS
+
   class ip_cell : public md_cell
     {
       protected:
@@ -35,7 +40,6 @@
         uint32_t _snIP     = 0;
         char     _ssid[NET_MAX_SSID_LEN] = "";
         char     _pw[NET_MAX_PW_LEN]   = "";
-//        ip_cell* _me;
 
       public:
         ip_cell() ;
@@ -43,11 +47,13 @@
 
         void init(uint32_t locIP, uint32_t gwIP, uint32_t snIP,
                     const char ssid[NET_MAX_SSID_LEN], const char pw[NET_MAX_PW_LEN]);
-        uint32_t locIP();
-        uint32_t gwIP();
-        uint32_t snIP();
-        void getSSID(char ssid[NET_MAX_SSID_LEN] );
-        void getPW(char pw[NET_MAX_PW_LEN]);
+        uint32_t locIP() { return(_locIP); }
+        uint32_t gwIP()  { return(_gwIP);  }
+        uint32_t snIP()  { return(_snIP);  }
+        void getSSID(char ssid[NET_MAX_SSID_LEN])
+                         { strcpy(ssid, _ssid); }
+        void getPW(char pw[NET_MAX_PW_LEN])
+                         { strcpy(pw, _pw); }
     };
 
   //

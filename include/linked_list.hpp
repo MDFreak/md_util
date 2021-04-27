@@ -5,24 +5,32 @@
  * Date .................: 20.11.2020
  *-----------------------------------------------------------------------
  * Function:
- *   provide linked list support with small footprint
+ *   Basic class for handling linked lists with small footprint
  *-----------------------------------------------------------------------
  * Dependecies:
  *   md_defines.h    (utility intern)
+ * Implementation
  *   linked_list.cpp implementation
  *-----------------------------------------------------------------------
  * Description:
- *   Primitives for handling linked lists
  *   - only void-pointers are connected with attributes
  *   - no extra memory allocation is done
- *   - some cell types are handled from derived classes like sorted list
- *     => type has to be defined and implemented
- *   - derivatives with specified types have to be introduced as well
- *   goal is small footprint with high performance
+ *   - payload is a simple void pointer
+ *     typeof of payload may be set as dattype_t defined md_defines.h
+ * Implementation:
+ *   - simple list of objects, organised as fifo or as stack
+ *   - fifo: first in = first out
+ *     implementation: append after last object, remove first object
+ *     push: add(void*),   pop: void*= rem() [def = OFIRST]
+ *   - stack:  last in = first out
+ *     implementation: append after last object, remove last object
+ *     push: add(void*),   pop: void*= rem(OLAST) [def = OFIRST]
+ * goal is small footprint with high performance
  ************************************************************************
  * Version| Date   | Changes                                    | Autor
  *-----------------------------------------------------------------------
  * 0.1.0  |20.11.20| import from former project                 | MD
+ * 0.1.1  |16.04.21| import from former project                 | MD
 *-----------------------------------------------------------------------*/
 
 #ifndef _LINKED_LIST_HPP_
@@ -33,12 +41,20 @@
   #include <md_defines.h>
 
   #define DICT_MAX_NAME_LEN 14
-  #define MD_CELL_TYPE_INT8  0
-  #define MD_CELL_TYPE_INT16 0
+  //#define MD_CELL_TYPE_INT8  0
+  //#define MD_CELL_TYPE_INT16 0
 
-  #define OFIRST   FALSE      // function call
-  #define OLAST    TRUE
-  #define OMAX     0x7FFF // = int16 max
+  #define LL_DEBUG CFG_DEBUG_NONE
+  //#define LL_DEBUG CFG_DEBUG_STARTUP
+  //#define LL_DEBUG CFG_DEBUG_ACTIONS
+  //#define LL_DEBUG CFG_DEBUG_DETAILS
+
+  enum OPOS_t
+    {
+      OFIRST = FALSE,      // function call
+      OMAX   = 0x7FFF, // = int16 max
+      OLAST  =  OMAX
+    };
 
   #define MD_DEBUG          TRUE
   #define DICT_DEBUG        TRUE
@@ -46,25 +62,22 @@
   // --- base classes md_cell, md_list
     class md_cell           /* Abstrakte Basisklasse fuer Listenelemente */
       {
-        protected:
-          void*     _pNext  = NULL;   // Pointer auf naechstes Listenelement
-          void*     _pPriv  = NULL;
-          dattype_t _tCell  = T_UNDEF;
+        private:
+          void* _pNext  = NULL;   // Pointer auf naechstes Listenelement
+          void* _pPriv  = NULL;
 
         public:
-          md_cell()                    { init(); }
-          md_cell(dattype_t celltype)  { init(); _tCell = celltype; }
-          ~md_cell() {}
+          md_cell();
+          ~md_cell();
 
-          void*     pNext()    { return (void*) _pNext; }
-          void*     pPriv()    { return (void*) _pPriv;}
-          dattype_t celltype() { return _tCell; }
-          void      setNext    (void* pNext) { _pNext = pNext; }
-          void      setPriv    (void* pPriv) { _pPriv = pPriv; }
-          void      setCelltype(dattype_t celltype) { _tCell = celltype; }
+          void* pNext();
+          void* pPriv();
+          void  pNext(void* pNext);
+          void  pPriv(void* pPriv);
         private:
-          void      init() { _pNext = _pPriv  = NULL; _tCell = T_UNDEF; }
+          void  init();
       };
+
     //
     class md_list
       {
@@ -80,8 +93,10 @@
           uint16_t count () { return _count; }
           void*    pFirst() { return (void*) _pFirst; }
           void*    pLast () { return (void*) _pLast; }
-          uint16_t add   (void* pCell);
-          uint16_t rem   (bool  first = OFIRST);
+          void     pFirst(void*  newpFirst) { _pFirst = (md_cell*) newpFirst; }
+          void     pLast (void*  newpLast)  { _pLast = (md_cell*) newpLast; }
+          ret_t    add   (void*  pCell);
+          ret_t    rem   (OPOS_t first = OFIRST);
       };
 
     #endif

@@ -15,9 +15,6 @@
       #define TRUE     1
       #define FALSE    0
 
-      #define ISERR   TRUE   // function call
-      #define ISOK    FALSE
-
       #define SWITCH  TRUE
 
       #define CR   13 // carrige return
@@ -32,18 +29,27 @@
       #define UTC_SUMMERTIME    1
       #define UTC_WINTERTIME    0
 
-      enum dattype_t
+
+      enum ret_t
         {
-          T_UNDEF = 0,
-          T_UINT8,
-          T_INT8,
-          T_UINT16,
-          T_INT16,
-          T_UINT32,
-          T_INT32,
-          T_DOUBLE,
-          T_TEXT
+          ISERR  = TRUE,   // function call
+          ISOK   = FALSE
         };
+
+      /*
+        typedef enum dattype_t
+          {
+            T_UNDEF = 0,
+            T_UINT8,
+            T_INT8,
+            T_UINT16,
+            T_INT16,
+            T_UINT32,
+            T_INT32,
+            T_DOUBLE,
+            T_TEXT
+          } dattype_t;
+        */
 
       #define DEBUG   TRUE
       #define NODEBUG FALSE

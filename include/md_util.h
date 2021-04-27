@@ -56,30 +56,5 @@
         uint8_t value();
         uint8_t pin();
     };
-  //
-  // class filterValue handles measurement values
-  //                   inside floating filtering
-  //
-  class filterValue
-    {
-      protected:
-        int8_t     _maxFilt   = 1;
-        uint8_t    _filt      = 0;
-        uint8_t    _pos       = 0;
-        //uint8_t    _
-        uint32_t*  _pVal      = NULL;  // *pVal[0] contains the filtered value
-        //uint32_t   _min       = 0;
-        //uint32_t   _max       = 0;
 
-      public:
-        filterValue(uint8_t filtAnz, uint8_t killPeek = 0);
-        ~filterValue();
-        double    calcVal(double   _val);
-        float     calcVal(float    _val) { return ((float)    calcVal((double) _val)); }
-        uint8_t   calcVal(uint8_t  _val) { return ((uint8_t)  calcVal((double) _val)); }
-        uint16_t  calcVal(uint16_t _val) { return ((uint16_t) calcVal((double) _val)); }
-        uint32_t  calcVal(uint32_t _val) { return ((uint32_t) calcVal((double) _val)); }
-        uint64_t  calcVal(uint64_t _val) { return ((uint64_t) calcVal((double) _val)); }
-        void      clear();
-    };
 #endif

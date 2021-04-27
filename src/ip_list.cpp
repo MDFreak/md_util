@@ -19,14 +19,19 @@
 
 #include <ip_list.hpp>
 
+// ---------------------------
 // class ip_cell
   ip_cell::ip_cell() : md_cell()
     {
-          SOUT(millis()); SOUT(" ip_cell new "); SOUTHEXLN((u_long) this);
+                #if (MDIP_DEBUG > CFG_DEBUG_NONE)
+                  SOUT(millis()); SOUT(" ip_cell new "); SOUTHEXLN((u_long) this);
+                #endif
     }
   ip_cell::~ip_cell()
     {
-          SOUT(millis()); SOUT(" ip_cell del me "); SOUTHEXLN((u_long) this);
+                #if (MDIP_DEBUG > CFG_DEBUG_NONE)
+                  SOUT(millis()); SOUT(" ip_cell del me "); SOUTHEXLN((u_long) this);
+                #endif
     }
   //
   void ip_cell::init(uint32_t locIP, uint32_t gwIP, uint32_t snIP,
@@ -38,39 +43,18 @@
       _snIP  = snIP;
       strncpy(_ssid, ssid, NET_MAX_SSID_LEN);
       strncpy(_pw, pw, NET_MAX_PW_LEN);
-                      SOUT(millis()); SOUT(" ip_cell init _locIP "); SOUTHEX(_locIP); SOUT("  _ssid "); SOUTLN(_ssid);
-    }
-  //
-  uint32_t ip_cell::locIP()
-    {
-      return(_locIP);
+                #if (MDIP_DEBUG > CFG_DEBUG_NONE)
+                  SOUT(millis()); SOUT(" ip_cell init _locIP "); SOUTHEX(_locIP); SOUT("  _ssid "); SOUTLN(_ssid);
+                #endif
     }
 
-  uint32_t ip_cell::gwIP()
-    {
-      return(_gwIP);
-    }
-
-  uint32_t ip_cell::snIP()
-    {
-      return(_snIP);
-    }
-
-  void ip_cell::getSSID(char ssid[NET_MAX_SSID_LEN] )
-    {
-      strcpy(ssid, _ssid);
-    }
-
-  void ip_cell::getPW(char pw[NET_MAX_PW_LEN])
-    {
-      strcpy(pw, _pw);
-    }
-//
+// ---------------------------
 // class ip_list
-//
   ip_list::ip_list() : md_list()
     {
-      SOUT(millis()); SOUT(" ip_list new");  SOUTHEXLN((u_long) this);
+                #if (MDIP_DEBUG > CFG_DEBUG_NONE)
+                  SOUT(millis()); SOUT(" ip_list new");  SOUTHEXLN((u_long) this);
+                #endif
     }
 
   ip_list::~ip_list()
@@ -78,9 +62,10 @@
       ip_cell* pip = NULL;
       void*    ptmp = NULL;
       uint16_t cnt  = this->count();
-
-                    SOUT(millis()); SOUT(" ip_list delete me");  SOUTHEX((u_long) this);
-                	  SOUT(" count "); SOUTLN(this->count());
+                #if (MDIP_DEBUG > CFG_DEBUG_NONE)
+                  SOUT(millis()); SOUT(" ip_list delete me");  SOUTHEX((u_long) this);
+              	  SOUT(" count "); SOUTLN(this->count());
+                #endif
       while (cnt > 0)
         {
           ptmp = this->pFirst();
@@ -88,7 +73,9 @@
           rem(OFIRST);
           if (cnt > this->count())
             {
-                    SOUT(" delete first "); SOUTHEXLN((u_long) pip);
+                    #if (MDIP_DEBUG > CFG_DEBUG_NONE)
+                      SOUT(" delete first "); SOUTHEXLN((u_long) pip);
+                    #endif
               delete( (ip_cell*) pip ) ;
               cnt--;
             }
@@ -105,9 +92,11 @@
       neu->init(locIP, gwIP, snIP, ssid, pw);
       char stmp[NET_MAX_SSID_LEN];
       neu->getSSID(stmp);
-      SOUT(millis());
-      SOUT("  append ip_cell "); SOUTHEX((u_long) neu);
-      SOUT("  locIP "); SOUTHEX(neu->locIP()); SOUT("  ssid "); SOUTLN(stmp);
+                #if (MDIP_DEBUG > CFG_DEBUG_NONE)
+                    SOUT(millis());
+                    SOUT("  append ip_cell "); SOUTHEX((u_long) neu);
+                    SOUT("  locIP "); SOUTHEX(neu->locIP()); SOUT("  ssid "); SOUTLN(stmp);
+                #endif
     }
 
 
@@ -116,7 +105,9 @@
       void*    ptmp = this->pFirst();
       ip_cell* pcell = (ip_cell*) ptmp;
       char myname[NET_MAX_SSID_LEN + 1] = "";
-                          //SOUT(" ip_list::find search for ssid "); SOUT(ssid); //SOUT(" ptmp "); SOUTHEXLN((u_long) ptmp);
+                #if (MDIP_DEBUG > CFG_DEBUG_NONE)
+                    SOUT(" ip_list::find search for ssid "); SOUT(ssid); //SOUT(" ptmp "); SOUTHEXLN((u_long) ptmp);
+                #endif
       while ( ptmp != NULL )
         {
           pcell = (ip_cell*) ptmp;

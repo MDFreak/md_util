@@ -15,7 +15,7 @@
  *-----------------------------------------------------------------------
  * 0.1.0  |20.11.20| import from former project                 | MD
 *-----------------------------------------------------------------------*/
-
+#ifdef _DICT_LIST_HPP_
 #include <dict_list.hpp>
 
 //
@@ -67,7 +67,7 @@
   //
   dict_cell* dict_list::getCellPointer( unsigned short index )
     {
-      void* ptmp; // = (void*) md_list::getCellPointer( index );
+      void* ptmp = NULL; // = (void*) md_list::getCellPointer( index );
       //SOUT(millis()); SOUT(" dict_list getCellPointer "); SOUTHEXLN((u_long) ptmp);
       return (dict_cell*) ptmp;
     }
@@ -143,4 +143,4 @@
     }
 
 /* EOF */
-
+#endif

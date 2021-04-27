@@ -5,7 +5,7 @@
  * Date .................: 20.11.2020
  *-----------------------------------------------------------------------
  * Function:
- *   provide linked list support with small footprint
+ *   Basic class for handling linked lists with small footprint
  *-----------------------------------------------------------------------
  * Dependecies:
  *   md_defines.h    (utility intern)
@@ -18,11 +18,38 @@
 
 #include "linked_list.hpp"
 
+// --- class md_cell           /* Abstrakte Basisklasse fuer Listenelemente */
+  md_cell::md_cell()
+             {
+               init();
+                      //SOUTLN(" md cell ");
+             }
+
+  md_cell::~md_cell()
+             {}
+
+  void* md_cell::pNext()
+                   { return (void*) _pNext; }
+
+  void* md_cell::pPriv()
+                   { return (void*) _pPriv; }
+
+  void  md_cell::pNext(void* pNext)
+                   { _pNext = pNext; }
+
+  void  md_cell::pPriv(void* pPriv)
+                   { _pPriv = pPriv; }
+
+  void  md_cell::init()
+                   { _pNext = _pPriv  = NULL; }
+
 // --- class md_list
-  uint16_t md_list::add(void* pCell)   /* ein Listenelement am Ende anhaengen */
+  ret_t md_list::add(void* pCell)   /* ein Listenelement am Ende anhaengen */
     {
-                        SOUT(millis()); SOUT(" md_list before add: count ");
-                        SOUT(_count);SOUT(" pFirst "); SOUTHEX((u_long) _pFirst); SOUT(" plast "); SOUTHEXLN((u_long) _pLast);
+                #if (LL_DEBUG > CFG_DEBUG_NONE)
+                  SOUT("   md_list before add: count ");
+                  SOUT(_count);SOUT(" pFirst "); SOUTHEX((u_long) _pFirst); SOUT(" plast "); SOUTHEXLN((u_long) _pLast);
+                #endif
       if (_pLast == NULL)            /* wenn noch kein Listenelement eingetragen */
           {
             _pFirst = _pLast = (md_cell*) pCell;
@@ -30,24 +57,27 @@
           }
         else
           {
-            _pLast->setNext(pCell);
+            _pLast->pNext(pCell);
             md_cell* ptmp = (md_cell*) pCell;
-            ptmp->setPriv((void*) _pLast);
-            ptmp->setNext(NULL);
+            ptmp->pPriv((void*) _pLast);
+            ptmp->pNext(NULL);
             _pLast = ptmp;
             _count++;
           }
-                    SOUT(millis()); SOUT(" md_list after add: count ");
+                #if (LL_DEBUG > CFG_DEBUG_NONE)
+                    SOUT("   md_list after add: count ");
                     SOUT(_count);SOUT(" pFirst "); SOUTHEX((u_long) _pFirst); SOUT(" plast "); SOUTHEXLN((u_long) _pLast);
-      return count();
+                #endif
+      return ISOK;
     }
 
-  uint16_t md_list::rem(bool first)
+  ret_t md_list::rem(OPOS_t first)
     {
       void*    ptmp  = NULL;
       md_cell* pcell = NULL;
-      //uint16_t count = _count;
-            SOUT(millis()); SOUT(" md_list remove ");
+                #if (IP_DEBUG > CFG_DEBUG_NONE)
+                  SOUT(millis()); SOUT(" md_list remove ");
+                #endif
       if ( _count > 0 )
         {
           if ( first == OFIRST )
@@ -56,7 +86,7 @@
               if ( ptmp != 0 ) // more cells exist
                 {
                   pcell = (md_cell*) ptmp;
-                  pcell->setPriv(NULL);
+                  pcell->pPriv(NULL);
                           SOUT(" first "); SOUTHEXLN((u_long) _pFirst);
                   _pFirst = pcell;
                 }
@@ -73,22 +103,22 @@
               if (ptmp != NULL)
                 {
                   pcell = (md_cell*) ptmp;
-                  pcell->setNext(NULL);
+                  pcell->pNext(NULL);
                           SOUT(" last "); SOUTHEXLN((u_long) _pLast);
                   _pLast = pcell;
                   if (_count > 0) _count--;
                 }
             }
-          return _count;
         }
       else
         {
+                #if (IP_DEBUG > CFG_DEBUG_NONE)
                   SOUTLN(" ERR list is empty ");
+                #endif
         }
 
       return ISOK;
     }
-
 
 /* EOF */
 
