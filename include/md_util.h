@@ -2,8 +2,10 @@
   #define _MD_UTIL_H_
 
   #include <Arduino.h>
+  #include <Time.h>
+  //#include <TimeLib.h>
   #include <md_defines.h>
-
+//#ifdef TMP
   uint16_t setBit(uint16_t inWert, uint16_t inBit, bool inVal = true, bool _debug = FALSE);
   uint16_t clrBit(uint16_t inWert, uint16_t inBit, bool _debug = FALSE);
   bool     getBit(uint16_t inWert, uint16_t inBit, bool _debug = FALSE);
@@ -56,5 +58,5 @@
         uint8_t value();
         uint8_t pin();
     };
-
+  //#endif // TMP
 #endif
