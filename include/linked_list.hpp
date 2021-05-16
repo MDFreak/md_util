@@ -63,19 +63,23 @@
     class md_cell           /* Abstrakte Basisklasse fuer Listenelemente */
       {
         private:
-          void* _pNext  = NULL;   // Pointer auf naechstes Listenelement
-          void* _pPriv  = NULL;
+          void*   _pNext  = NULL;   // Pointer auf naechstes Listenelement
+          void*   _pPriv  = NULL;
+          uint8_t _idx    = 0;
 
         public:
           md_cell();
           ~md_cell();
 
-          void* pNext();
-          void* pPriv();
-          void  pNext(void* pNext);
-          void  pPriv(void* pPriv);
+          void*   pNext(void);
+          void*   pPriv(void);
+          void    pNext(void* pNext);
+          void    pPriv(void* pPriv);
+          uint8_t index(void);
+          void    index(uint8_t idx) { _idx = idx; }
+
         private:
-          void  init();
+          void    init();
       };
 
     //
@@ -95,6 +99,7 @@
           void*    pLast () { return (void*) _pLast; }
           void     pFirst(void*  newpFirst) { _pFirst = (md_cell*) newpFirst; }
           void     pLast (void*  newpLast)  { _pLast = (md_cell*) newpLast; }
+          void*    pIndex(uint8_t idx);
           ret_t    add   (void*  pCell);
           ret_t    rem   (OPOS_t first = OFIRST);
       };

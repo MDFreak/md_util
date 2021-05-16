@@ -66,13 +66,15 @@
         int8_t   _cnt     = 0;
         int8_t   _filtPos = 0;
         double   _filtVal = 0.;
+        double   _offset  = 0.;
+        double   _gain    = 1.;
         md_list* _pVals   = NULL;
 
       public:
-        filterValue(uint8_t filtAnz, uint8_t killPeek = 0);
+        filterValue(uint8_t filtAnz, uint8_t killPeek = 0, double offset = 0., double gain = 1.);
         ~filterValue();
 
-        void   init(uint8_t filtAnz, uint8_t killPeek = 0);
+        void   init(uint8_t filtAnz, uint8_t killPeek = 0, double offset = 0., double gain = 1.);
         void   clear();
         double value(double inval);
         double value();

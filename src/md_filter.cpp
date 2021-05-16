@@ -41,10 +41,10 @@ md_val::~md_val()
       Rueckgabe INT-Ergebnis
   \*---------------------------------------------------------------------*/
 
-filterValue::filterValue(uint8_t filtAnz, uint8_t killPeek)
+filterValue::filterValue(uint8_t filtAnz, uint8_t killPeek, double offset, double gain)
   {
     _pVals = new md_list();
-    init(filtAnz, killPeek);
+    init(filtAnz, killPeek, offset, gain);
   }
 
 filterValue::~filterValue()
@@ -54,7 +54,7 @@ filterValue::~filterValue()
     _pVals = NULL;
   }
 
-void filterValue::init(uint8_t filtAnz, uint8_t killPeek)
+void filterValue::init(uint8_t filtAnz, uint8_t killPeek, double offset, double gain)
   {
     // check parameters killPeek <= 2
       if (filtAnz < 1)  { filtAnz  = 1; }
@@ -69,6 +69,8 @@ void filterValue::init(uint8_t filtAnz, uint8_t killPeek)
     clear();
     _maxCnt  = filtAnz;
     _minIdx  = killPeek;
+    _offset  = offset;
+    _gain    = gain;
     _maxIdx  = _maxCnt - killPeek - 1;
     if (_maxIdx < _minIdx) { _maxIdx =_minIdx; }
     _filtVal = 0.;
@@ -195,7 +197,8 @@ void   filterValue::sum()
                   //SOUT(" new ptmp "); SOUTHEXLN((ulong) ptmp); SOUTLN();
       }
     tmp = idxL - idx1 + 1;
-    _filtVal = _filtVal / tmp;
+    _filtVal = (_filtVal * _gain / tmp) + _offset;
+
 
               #if (VAL_DEBUG > CFG_DEBUG_ACTIONS)
                   SOUT(" sum filtVal "); SOUTLN(_filtVal);

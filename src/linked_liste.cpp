@@ -28,20 +28,22 @@
   md_cell::~md_cell()
              {}
 
-  void* md_cell::pNext()
+  void*   md_cell::pNext()
                    { return (void*) _pNext; }
 
-  void* md_cell::pPriv()
+  void*   md_cell::pPriv()
                    { return (void*) _pPriv; }
 
-  void  md_cell::pNext(void* pNext)
+  void    md_cell::pNext(void* pNext)
                    { _pNext = pNext; }
 
-  void  md_cell::pPriv(void* pPriv)
+  void    md_cell::pPriv(void* pPriv)
                    { _pPriv = pPriv; }
 
-  void  md_cell::init()
+  void    md_cell::init()
                    { _pNext = _pPriv  = NULL; }
+  uint8_t md_cell::index()
+                   { return _idx; }
 
 // --- class md_list
   ret_t md_list::add(void* pCell)   /* ein Listenelement am Ende anhaengen */
@@ -53,6 +55,7 @@
       if (_pLast == NULL)            /* wenn noch kein Listenelement eingetragen */
           {
             _pFirst = _pLast = (md_cell*) pCell;
+            _pLast->index(_count);
             _count++;
           }
         else
@@ -62,6 +65,7 @@
             ptmp->pPriv((void*) _pLast);
             ptmp->pNext(NULL);
             _pLast = ptmp;
+            _pLast->index(_count);
             _count++;
           }
                 #if (LL_DEBUG > CFG_DEBUG_NONE)
@@ -87,7 +91,9 @@
                 {
                   pcell = (md_cell*) ptmp;
                   pcell->pPriv(NULL);
+                        #if (IP_DEBUG > CFG_DEBUG_NONE)
                           SOUT(" first "); SOUTHEXLN((u_long) _pFirst);
+                        #endif
                   _pFirst = pcell;
                 }
               else // last cell left
@@ -104,7 +110,9 @@
                 {
                   pcell = (md_cell*) ptmp;
                   pcell->pNext(NULL);
+                        #if (IP_DEBUG > CFG_DEBUG_NONE)
                           SOUT(" last "); SOUTHEXLN((u_long) _pLast);
+                        #endif
                   _pLast = pcell;
                   if (_count > 0) _count--;
                 }
@@ -120,5 +128,22 @@
       return ISOK;
     }
 
+  void* md_list::pIndex(uint8_t idx)
+    {
+      md_cell* ptmp = (md_cell*) _pFirst;
+              //SOUT(" pIndex pFirst "); SOUTHEX((uint32_t) ptmp);
+      while (ptmp != NULL)
+        {
+              //SOUT(" ptmp->idx "); SOUT(ptmp->index());
+          if (ptmp->index() == idx)
+            {
+              break;
+            }
+          ptmp = (md_cell*) ptmp->pNext();
+              //SOUT(" pNext "); SOUTHEX((uint32_t) ptmp);
+        }
+              //SOUTLN();
+      return (void*) ptmp;
+    }
 /* EOF */
 

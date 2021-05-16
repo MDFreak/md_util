@@ -29,12 +29,14 @@
       #define UTC_SUMMERTIME    1
       #define UTC_WINTERTIME    0
 
-
       enum ret_t
         {
-          ISERR  = TRUE,   // function call
-          ISOK   = FALSE
-        };
+          ISOK     = FALSE,       // 0
+          ERR_OPEN,               // 2^0
+          ERR_GND,                // 2^1
+          ERR_VCC,                // 2^2
+          ISERR    = 0x010000     // 2^16
+        } ;
 
       /*
         typedef enum dattype_t
