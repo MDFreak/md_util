@@ -42,11 +42,43 @@
 
   void    md_cell::init()
                    { _pNext = _pPriv  = NULL; }
+
+  void    md_cell::index(uint8_t idx)
+                   { _idx = idx; }
+
   uint8_t md_cell::index()
                    { return _idx; }
 
+  void*   md_cell::getobj(void)
+                   { return _obj; }
+
+  void    md_cell::setobj(void* obj)
+                   { _obj = obj; }
+
+
 // --- class md_list
-  ret_t md_list::add(void* pCell)   /* ein Listenelement am Ende anhaengen */
+  uint16_t md_list::count  ()
+                   { return _count; }
+
+  uint8_t  md_list::mode   ()
+                   { return _mode; }
+
+  void     md_list::setmode(uint8_t newmode)
+                   { if (newmode == OBJUSER) { _mode = OBJUSER; } else { _mode = OBJDEF; } }
+
+  void*    md_list::pFirst ()
+                   { return (void*) _pFirst; }
+
+  void*    md_list::pLast  ()
+                   { return (void*) _pLast; }
+
+  void     md_list::pFirst (void*  newpFirst)
+                   { _pFirst = (md_cell*) newpFirst; }
+
+  void     md_list::pLast  (void*  newpLast)
+                   { _pLast = (md_cell*) newpLast; }
+
+  ret_t    md_list::add    (void* pCell)   /* ein Listenelement am Ende anhaengen */
     {
                 #if (LL_DEBUG > CFG_DEBUG_NONE)
                   SOUT("   md_list before add: count ");
@@ -75,7 +107,7 @@
       return ISOK;
     }
 
-  ret_t md_list::rem(OPOS_t first)
+  ret_t    md_list::rem    (OPOS_t first)
     {
       void*    ptmp  = NULL;
       md_cell* pcell = NULL;
@@ -117,6 +149,7 @@
                   if (_count > 0) _count--;
                 }
             }
+          doIdx();
         }
       else
         {
@@ -128,7 +161,7 @@
       return ISOK;
     }
 
-  void* md_list::pIndex(uint8_t idx)
+  void*    md_list::pIndex (uint8_t idx)
     {
       md_cell* ptmp = (md_cell*) _pFirst;
               //SOUT(" pIndex pFirst "); SOUTHEX((uint32_t) ptmp);
@@ -145,5 +178,18 @@
               //SOUTLN();
       return (void*) ptmp;
     }
+
+  void     md_list::doIdx  ()
+    { // renew idx to members
+      uint8_t  myIdx = 0;
+      md_cell* ptmp = (md_cell*) _pFirst;
+      while (ptmp != NULL)
+        {
+          ptmp->index(myIdx);
+          myIdx++;
+          ptmp = (md_cell*) ptmp->pNext();
+        }
+    }
+
 /* EOF */
 

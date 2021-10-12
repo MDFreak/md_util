@@ -37,7 +37,7 @@
   #define _LINKED_LIST_HPP_
 
   #include <stdlib.h>
-  #include <Arduino.h>
+  //#include <Arduino.h>
   #include <md_defines.h>
 
   #define DICT_MAX_NAME_LEN 14
@@ -66,17 +66,20 @@
           void*   _pNext  = NULL;   // Pointer auf naechstes Listenelement
           void*   _pPriv  = NULL;
           uint8_t _idx    = 0;
+          void*   _obj    = NULL;
 
         public:
           md_cell();
           ~md_cell();
 
-          void*   pNext(void);
-          void*   pPriv(void);
-          void    pNext(void* pNext);
-          void    pPriv(void* pPriv);
-          uint8_t index(void);
-          void    index(uint8_t idx) { _idx = idx; }
+          void*   pNext (void);
+          void*   pPriv (void);
+          void    pNext (void* pNext);
+          void    pPriv (void* pPriv);
+          uint8_t index (void);
+          void    index (uint8_t idx);
+          void*   getobj(void);
+          void    setobj(void* obj);
 
         private:
           void    init();
@@ -89,19 +92,25 @@
           md_cell* _pFirst = NULL;
           md_cell* _pLast  = NULL;
           uint16_t _count  = 0;
+          uint8_t  _mode   = OBJDEF;
 
         public:
           md_list()  { _pFirst = _pLast = NULL; _count = 0; } // Konstruktor
           ~md_list() {}
 
-          uint16_t count () { return _count; }
-          void*    pFirst() { return (void*) _pFirst; }
-          void*    pLast () { return (void*) _pLast; }
-          void     pFirst(void*  newpFirst) { _pFirst = (md_cell*) newpFirst; }
-          void     pLast (void*  newpLast)  { _pLast = (md_cell*) newpLast; }
-          void*    pIndex(uint8_t idx);
-          ret_t    add   (void*  pCell);
-          ret_t    rem   (OPOS_t first = OFIRST);
+          uint16_t count  ();
+          uint8_t  mode   ();
+          void     setmode(uint8_t newmode = OBJUSER);
+          void*    pFirst ();
+          void*    pLast  ();
+          void     pFirst (void*  newpFirst);
+          void     pLast  (void*  newpLast);
+          void*    pIndex (uint8_t idx);
+          ret_t    add    (void*  pCell);
+          ret_t    rem    (OPOS_t first = OFIRST);
+
+        private:
+          void     doIdx ();
       };
 
     #endif

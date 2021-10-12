@@ -16,16 +16,18 @@
   class msTimer
     {
       private:
-        unsigned long _tout;
-        unsigned long _tstart;
+        uint64_t _tout;
+        uint64_t _tstart;
 
       public:
         msTimer();
-        msTimer(const unsigned long inTOut);
+        msTimer(const uint64_t inTOut);
 
-        bool TOut();
-        void startT();
-        void startT(const unsigned long inTOut);
+        bool      TOut();
+        void      startT();
+        void      startT(const uint64_t inTOut);
+        uint64_t  getTact();
+        uint64_t  getTout();
     };
 
   //

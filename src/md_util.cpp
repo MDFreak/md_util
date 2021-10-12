@@ -1,4 +1,4 @@
-#include <md_util.h>
+#include "md_util.h"
 #include <wire.h>
 #include <dict_list.hpp>
 
@@ -133,7 +133,7 @@ char* getBinStr(char* pstr, uint16_t val, bool _debug)
       startT(0);
     }
 
-  msTimer::msTimer(const unsigned long inTOut)
+  msTimer::msTimer(const uint64_t inTOut)
     {
       startT(inTOut);
     }
@@ -152,10 +152,19 @@ char* getBinStr(char* pstr, uint16_t val, bool _debug)
       _tstart = millis();
     }
 
-  void msTimer::startT(const unsigned long inTOut)
+  void msTimer::startT(const uint64_t inTOut)
     {
       _tstart = millis();
       _tout   = inTOut;
+    }
+  uint64_t msTimer::getTact()
+    {
+      return millis() - _tstart ;
+    }
+
+  uint64_t msTimer::getTout()
+    {
+      return millis() - _tout ;
     }
 
 //
