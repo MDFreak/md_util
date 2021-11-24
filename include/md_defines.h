@@ -11,7 +11,7 @@
       #define NU      -1  // not used
       #define NC      -1  // not connected
       #define UNDEF    0
-      #define OFF      0  // not active
+      #define OFF                                                    0  // not active
       #define ON       1  // active
 
       #define TRUE     1
@@ -24,13 +24,14 @@
 
       #define SWITCH  TRUE
 
-      #define CR   13 // carrige return
-      #define LF   10 // line feed
-      #define LN   LF
-      #define U3V3  3
-      #define U5V   5
+      #define CR       13 // carrige return
+      #define LF       10 // line feed
+      #define LN       LF
+      #define U3V3     3
+      #define U5V      5
 
-      #define NOKEY 0
+      #define NOKEY    0
+      #define NO_PIN   255
 
       #define UTC_TIMEZONE      3600           // +1 hour
       #define UTC_SUMMERTIME    3600           // +1 hour
@@ -183,28 +184,28 @@
           #define  OLED_DRV_1106              1106
           #define  OLED_DRV_1306              1306
 
-          #define  MC_UO_OLED_066           MC_PW_3V3 + MC_MOTY_UOUT + 0x0005u // IIC adress 0x3C,0x3D solder switch
+          #define  MC_UO_OLED_066_AZ        MC_PW_3V3 + MC_MOTY_UOUT + 0x0005u // IIC adress 0x3C,0x3D solder switch
             #define  OLED_066_GEO             GEO_64_48
             #define  OLED_066_DRV             OLED_DRV_1306
-            #define  OLED_066_MAXCOLS         12  // ??
+            #define  OLED_066_MAXCOLS         14  // ??
             #define  OLED_066_MAXROWS         4
 
           #define  MC_UO_OLED_091_AZ        MC_PW_3V3 + MC_MOTY_UOUT + 0x0006u// IIC adress 0x3C
             #define  OLED_091_GEO             GEO_128_32
             #define  OLED_091_DRV             OLED_DRV_1306
-            #define  OLED_091_MAXCOLS         20
+            #define  OLED_091_MAXCOLS         30
             #define  OLED_091_MAXROWS         4
 
           #define  MC_UO_OLED_096_AZ        MC_PW_3V3 + MC_MOTY_UOUT + 0x0007u
             #define  OLED_096_GEO             GEO_128_64
             #define  OLED_096_DRV             OLED_DRV_1306
-            #define  OLED_096_MAXCOLS         20
+            #define  OLED_096_MAXCOLS         30
             #define  OLED_096_MAXROWS         6
 
           #define  MC_UO_OLED_130_AZ        MC_PW_3V3 + MC_MOD_UOUT + 0x0008u
             #define  OLED_130_GEO             GEO_128_64
             #define  OLED_130_DRV             OLED_DRV_1106
-            #define  OLED_130_MAXCOLS         20
+            #define  OLED_130_MAXCOLS         30
             #define  OLED_130_MAXROWS         6
       // --- user input parts (MC_MOTY_UIN)
         // --- keypads
