@@ -49,45 +49,53 @@
 
       // typedef data types
         /*
-        #ifndef int8_t
-          typedef char int8_t;
-        #endif
-        #ifndef uint8_t
-          typedef unsigned char uint8_t;
-        #endif
-        #ifndef int16_t
-          typedef short int16_t;
-        #endif
-        #ifndef uint16_t
-          typedef unsigned short uint16_t;
-        #endif
-        #ifndef int32_t
-          typedef int int32_t;
-        #endif
-        #ifndef uint32_t
-          typedef unsigned int uint32_t;
-        #endif
-        #ifndef int64_t
-          typedef long int64_t;
-        #endif
-        #ifndef uint64_t
-          typedef unsigned long uint64_t;
-        #endif
-        */
-      /*
-        typedef enum dattype_t
+          #ifndef int8_t
+            typedef char int8_t;
+          #endif
+          #ifndef uint8_t
+            typedef unsigned char uint8_t;
+          #endif
+          #ifndef int16_t
+            typedef short int16_t;
+          #endif
+          #ifndef uint16_t
+            typedef unsigned short uint16_t;
+          #endif
+          #ifndef int32_t
+            typedef int int32_t;
+          #endif
+          #ifndef uint32_t
+            typedef unsigned int uint32_t;
+          #endif
+          #ifndef int64_t
+            typedef long int64_t;
+          #endif
+          #ifndef uint64_t
+            typedef unsigned long uint64_t;
+          #endif
+          */
+
+        typedef enum dattype
           {
-            T_UNDEF = 0,
-            T_UINT8,
-            T_INT8,
-            T_UINT16,
-            T_INT16,
-            T_UINT32,
-            T_INT32,
-            T_DOUBLE,
-            T_TEXT
+            DT_UNDEF   = 0,
+            DT_8BIT,             // 8 bit types
+            DT_INT8    = DT_8BIT,
+            DT_UINT8,
+            DT_CHAR,
+            DT_16BIT,            // 16 bit types
+            DT_INT16   = DT_16BIT,
+            DT_UINT16,
+            DT_32BIT,            // 32 bit types
+            DT_INT32   = DT_32BIT,
+            DT_UINT32,
+            DT_PCHAR,
+            DT_PVOID,
+            DT_PSTRING,
+            DT_64BIT,            // 64 bit types
+            DT_INT64   = DT_64BIT,
+            DT_DOUBLE,
+            DT_END
           } dattype_t;
-        */
 
       #define DEBUG   TRUE
       #define NODEBUG FALSE

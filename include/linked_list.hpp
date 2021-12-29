@@ -113,4 +113,84 @@
           void     doIdx ();
       };
 
+
+  /* ===========================================
+     reduced library from Stefan Kremser github.com/spacehuhn
+    */
+
+  #include <type_traits>
+  #include <cstddef>
+  #include <functional>
+
+    template<class T>
+    struct smal_node
+      {
+          T             data;
+          smal_node<T>* next = NULL;
+      };
+
+    template<typename T>
+    class smal_list
+      {
+        public:
+          smal_list();
+          smal_list(int(*compare)(T & a, T & b));
+          virtual ~smal_list();
+
+          virtual void setCompare(int (* compare)(T& a, T& b));
+
+          virtual int size();
+          virtual bool isSorted();
+          virtual bool isEmpty();
+
+          virtual void add(int index, T obj);
+          virtual void add(T obj);
+          virtual void insert(T obj);
+
+          virtual void replace(int index, T obj);
+          virtual void swap(int x, int y);
+
+          virtual void remove(int index);
+          virtual void removeFirst();
+          virtual void removeLast();
+
+          virtual bool has(T obj);
+          virtual int count(T obj);
+
+          virtual T shift();
+          virtual T pop();
+          virtual T get(int index);
+          virtual T getFirst();
+          virtual T getLast();
+
+          virtual void moveToEnd();
+
+          virtual int search(T obj);
+          virtual int searchNext(T obj);
+          virtual int binSearch(T obj);
+
+          virtual void sort();
+          virtual void clear();
+
+        protected:
+          int (* compare)(T& a, T& b) = NULL;
+
+          int listSize            = 0;
+          smal_node<T>* listBegin = NULL;
+          smal_node<T>* listEnd   = NULL;
+
+          // Helps get() method by saving last position
+          smal_node<T>* lastNodeGot = NULL;
+          int  lastIndexGot       = -1;
+          bool isCached           = false;
+
+          bool sorted = true;
+
+          virtual smal_node<T>* getNode(int index);
+          virtual int binSearch(T obj, int lowerEnd, int upperEnd);
+      };
+
+
+
+
     #endif

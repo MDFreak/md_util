@@ -18,6 +18,17 @@ uint16_t clrBit(const uint16_t inWert, const uint16_t inBit, bool _debug)
     return ret;
   }
 
+uint16_t getBit(const uint16_t inWert, const uint16_t inBit, bool _debug)
+  {
+    uint16_t ret = inWert & inBit;
+    if (_debug)
+      {
+        SOUT(" getBit: inWert= "); SOUTHEX(inWert);
+        SOUT("  inBit="); SOUT(inBit); SOUT(" ret= "); SOUTHEXLN(ret);
+      }
+    return ret;
+  }
+
 uint16_t setBit(const uint16_t inWert, const uint16_t inBit, const bool inVal, bool _debug)
   {
 

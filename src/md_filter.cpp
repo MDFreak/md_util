@@ -1,25 +1,159 @@
 #include <md_util.h>
 #include <wire.h>
 #include <md_filter.hpp>
+  /*
+    // class md_val
+    template<typename T>
+    md_val<T>::~md_val()
+      {
+        if (_pvals != NULL) { delete _pvals;  }
+        if (_psort != NULL) { delete _psort; }
+      }
 
-// class md_val
-md_val::md_val(double val, int8_t idx)
-  {
-            #if (VAL_DEBUG > CFG_DEBUG_ACTIONS)
-                SOUT("   md_val new "); SOUTHEX((ulong) this);
-                SOUT(" idx ");  SOUT(idx); SOUT(" val "); SOUTLN((int32_t) val);
-            #endif
-    _val = val;
-    _idx = idx;
-  }
+    template<typename T>
+    void md_val<T>::begin(uint8_t numFilts, uint8_t numDrops, filter_t filtType)
+      {
+        if (numFilts > 1)
+          {
+            _pvals = new T[numFilts];
+          }
 
-md_val::~md_val()
-  {
-            #if (VAL_DEBUG > CFG_DEBUG_ACTIONS)
-                SOUT(" md_val del "); SOUTHEXLN((ulong) this);
-            #endif
-  }
+        _numFilts = numFilts;
+        if (numFilts > 2 * numDrops)
+          {
+            _numDrops = numDrops;
+          } // else Drops are too many => stay 0
+        switch (filtType)
+          {
+            case FILT_FL_MEAN: // floating mean value, possible max/min drop
+              _tfilt = filtType;
+              break;
+            case FILT_STD_DEV: // standard deviation TODO -> not implemented
+              // break;
+            default:
+              _tfilt = FILT_NU;
+              break;
+          }
+        _tfilt    = filtType;
+        _cnt      = 0;
 
+        if (_numFilts > 1)
+          {
+            T tmp[_numFilts] = new(T[_numFilts]);
+            _pvals = &tmp[0];
+            _psort  = new uint8_t[_numFilts];
+            for (uint8_t i = 0 ; i < _numFilts ; i++ )
+              {
+                _pvals[i]  = 0;
+                _psort[i] = 0;
+              }
+          }
+      };
+
+    template<typename T>
+    T    md_val<T>::doVal (T newVal)
+      {
+        // no filter
+        if (_numFilts == 0)
+          {
+            _val = newVal;
+            return newVal;
+          }
+
+        if (_cnt > 0)
+          {
+            _actIdx++;
+            if (_actIdx >= _numFilts) { _actIdx = 0; }
+          }
+        _pvals[_actIdx] = newVal;
+
+        if ( _cnt < _numFilts ) // initial upload of values
+          {
+            _psort[_actIdx] = _actIdx;
+            _cnt++;
+          }
+        _sort();
+        _calc();
+      }
+
+    template<typename T>
+    void md_val<T>::clear()
+      {
+        if (_pvals != NULL)
+          {
+            for ( uint8_t i = 0 ; i <_numFilts ; i++ )
+              {
+                _pvals[i] = 0;
+                _psort[i]= 0;
+              }
+            _actIdx = 0;
+            _cnt     = 0;
+          }
+      }
+
+    template<typename T>
+    void md_val<T>::_sort()
+      {
+        uint8_t state = 0; // 1 = dir up ready, 2 = dir down ready, 3 = ready
+        uint8_t idx   = _actIdx;
+        for ( uint8_t i = idx + 1 ; i < _numFilts ; i++ )
+          {
+            if (_pvals[_psort[idx]] > _pvals[_psort[i]])
+              {
+                _swapSort(idx, i);
+                state |= 2;
+                idx++;
+              }
+            else
+              {
+                break;
+              }
+          }
+        state |= 1;
+
+        if ( state < 3 )
+          {
+            for ( int8_t i = idx - 1 ; i >= 0 ; i-- )
+              {
+                if (_pvals[_psort[idx]] < _pvals[_psort[i]])
+                  {
+                    _swapSort(idx, i);
+                    //state |= 1;
+                    idx--;
+                  }
+                else
+                  {
+                    break;
+                  }
+              }
+          }
+      }
+
+    template<typename T>
+    void md_val<T>::_swapSort(uint8_t idx1, uint8_t idx2)
+      {
+        uint8_t tmp  = _psort[idx1];
+        _psort[idx1] = _psort[idx2];
+        _psort[idx2] = tmp;
+      }
+
+    template<typename T>
+    void md_val<T>::_calc()
+      {
+        if (_tfilt == FILT_FL_MEAN)
+          {
+            uint8_t begSum = _numDrops;
+            uint8_t endSum = _numFilts - _numDrops -1;
+            int8_t  cnt    = _numFilts - (_numDrops << 1);
+            T       sum    = 0;
+            for (uint8_t i = 0 ; i < cnt ; i++)
+              {
+                sum += _pvals[_psort[i]];
+              }
+            _val = sum / cnt;
+          }
+      }
+  */
 //
 // class filterValue
   /*---------------------------------------------------------------------
@@ -31,7 +165,6 @@ md_val::~md_val()
       - Fuer jeden skalierten Analogwert wird ein Ringpuffer mitgefuehrt, aus
         dem ein gefilterter Wert mit der Funktion akt_filt_Messwert()
         berechnet werden kann
-
 
       Mittelzahl > 1 bedeutet:
         Bei jedem Aufruf wird der Messwert berechnet und aufaddiert,
@@ -92,7 +225,7 @@ void   filterValue::clear()
     while ( (_cnt > 0) && (ptmp != NULL) )
       {
         _pVals->rem();
-        delete (md_val*) ptmp;
+        delete (md0_val*) ptmp;
                           #if (VAL_DEBUG > CFG_DEBUG_STARTUP)
                             SOUT(" delete "); SOUTHEX((u_long) ptmp);
                           #endif
@@ -122,26 +255,26 @@ double filterValue::value(double inval)
                 SOUT(" value ... anz "); SOUT(_cnt); SOUT(" / ");  SOUT(_maxCnt); SOUT(" val= "); SOUT(inval);
                 SOUT(" sum "); SOUT((int32_t) _filtVal); SOUT(" _pos "); SOUTLN(_filtPos);
             #endif
-    md_val* ptmp = NULL;
+    md0_val* ptmp = NULL;
     int8_t  idx  = _cnt;
     // new index
     if (_cnt < _maxCnt)
       {
-        ptmp = new md_val(inval, idx);
+        ptmp = new md0_val(inval, idx);
         ptmp->filtPos(_filtPos);
         _pVals->add((void*) ptmp);
         _cnt++;
       }
     else
       {
-        ptmp = (md_val*) _pVals->pFirst();
+        ptmp = (md0_val*) _pVals->pFirst();
         while ( (ptmp != NULL) && (_filtPos != ptmp->filtPos()) )
           {
-            ptmp = (md_val*) ptmp->pNext();
+            ptmp = (md0_val*) ptmp->pNext();
           }
         if (ptmp != NULL)
           {
-            ptmp->value(inval);
+            //ptmp->value(inval);
             move(ptmp, _cnt-1);
           }
       }
@@ -178,7 +311,7 @@ void   filterValue::sum()
               #if (VAL_DEBUG > CFG_DEBUG_ACTIONS)
                   SOUT(" sum idx1 - idxL "); SOUT(idx1); SOUT(" - "); SOUT(idxL);
               #endif
-    md_val* ptmp = (md_val*) _pVals->pFirst();
+    md0_val* ptmp = (md0_val*) _pVals->pFirst();
     int8_t  tmp  = ptmp->index();
     while (tmp <= idxL)
       {
@@ -192,7 +325,7 @@ void   filterValue::sum()
           }
                   //SOUTLN(); SOUTLN(); SOUT("EX ptmp "); SOUTHEX((ulong) ptmp);
                   //SOUT(" pNext "); SOUTHEX((ulong) (ptmp->pNext()));
-        ptmp = (md_val*) ptmp->pNext();
+        ptmp = (md0_val*) ptmp->pNext();
         tmp++;
                   //SOUT(" new ptmp "); SOUTHEXLN((ulong) ptmp); SOUTLN();
       }
@@ -207,21 +340,21 @@ void   filterValue::sum()
 
 void   filterValue::sortLast()
   {
-    md_val* pH   = (md_val*) _pVals->pLast();
-    md_val* pL   = pH;
+    md0_val* pH   = (md0_val*) _pVals->pLast();
+    md0_val* pL   = pH;
     double  valH = 0.;
     int8_t  idx  = -1;
 
     if (pH == NULL)
       { return; }
-    valH = pH->value();
+//    valH = pH->value();
               #if (VAL_DEBUG > CFG_DEBUG_ACTIONS)
                   SOUT("    sortLast new val "); SOUT( valH ); SOUT(" pLast "); SOUTHEXLN((ulong) pH);
               #endif
 
     while ( (pL != NULL) && (idx < 0) )
       {
-        pL = (md_val*) pL->pPriv();
+        pL = (md0_val*) pL->pPriv();
         if (pL != NULL)
           {
                       #if (VAL_DEBUG > CFG_DEBUG_ACTIONS)
@@ -229,7 +362,7 @@ void   filterValue::sortLast()
                           SOUT(" val "); SOUT( pL->value() );
                           SOUT(" idx "); SOUT( pL->index() );
                       #endif
-            if (valH >= (pL->value()))
+              if (valH >= (pL->value()))
                 {
                   idx = pL->index() + 1;
                       #if (VAL_DEBUG > CFG_DEBUG_ACTIONS)
@@ -238,7 +371,7 @@ void   filterValue::sortLast()
                 }
               else
                 {
-                  //pL = (md_val*) pL->pPriv();
+                  pL = (md0_val*) pL->pPriv();
                       #if (VAL_DEBUG > CFG_DEBUG_ACTIONS)
                           SOUT(" pPriv "); SOUTHEX((ulong) pL);
                       #endif
@@ -254,18 +387,18 @@ void   filterValue::sortLast()
     move(pH, idx);
   }
 
-void   filterValue::move(md_val* pCell, int8_t dest)
+void   filterValue::move(md0_val* pCell, int8_t dest)
   {
     //
             /*
-              md_val* myp = (md_val*) _pVals->pFirst();
+              md0_val* myp = (md0_val*) _pVals->pFirst();
               SOUTLN(" listdump before move ");
               for ( uint8_t i=0 ; i<_cnt ; i++ )
                 {
                   SOUTHEX((ulong) myp); SOUT(" "); SOUT(myp->index()); SOUT(" ");
                   SOUTHEX((ulong) myp->pPriv()); SOUT(" "); SOUTHEX((ulong) myp->pNext()); SOUT(" ");
                   SOUT(myp->filtPos()); SOUT(" "); SOUTLN(myp->value());
-                  myp = (md_val*) myp->pNext();
+                  myp = (md0_val*) myp->pNext();
                 }
             */
 
@@ -292,25 +425,25 @@ void   filterValue::move(md_val* pCell, int8_t dest)
                   #endif
       }
             /*
-              myp = (md_val*) _pVals->pFirst();
+              myp = (md0_val*) _pVals->pFirst();
               SOUTLN(" listdump after move ");
               for ( uint8_t i=0 ; i<_cnt ; i++ )
                 {
                   SOUTHEX((ulong) myp); SOUT(" "); SOUT(myp->index()); SOUT(" ");
                   SOUTHEX((ulong) myp->pPriv()); SOUT(" "); SOUTHEX((ulong) myp->pNext()); SOUT(" ");
                   SOUT(myp->filtPos()); SOUT(" "); SOUTLN(myp->value());
-                  myp = (md_val*) myp->pNext();
+                  myp = (md0_val*) myp->pNext();
                 }
             */
   }
 
-void  filterValue::dec(md_val* pIn)
+void  filterValue::dec(md0_val* pIn)
     {
-      md_val* pC1 = pIn;
-      md_val* pC2 = (md_val*) pC1->pPriv();
+      md0_val* pC1 = pIn;
+      md0_val* pC2 = (md0_val*) pC1->pPriv();
 
       //upper cell
-      md_val* ptmp = (md_val*) pC1->pNext();
+      md0_val* ptmp = (md0_val*) pC1->pNext();
       if (ptmp != NULL)
           {
             //
@@ -330,7 +463,7 @@ void  filterValue::dec(md_val* pIn)
           }
       pC2->pNext(ptmp);
       //lower next cell
-      ptmp = (md_val*) pC2->pPriv();
+      ptmp = (md0_val*) pC2->pPriv();
       if (ptmp != NULL)
         {
           //
@@ -377,13 +510,13 @@ void  filterValue::dec(md_val* pIn)
                   #endif
     }
 
-void  filterValue::inc(md_val* pIn)
+void  filterValue::inc(md0_val* pIn)
     {
-      md_val* pC1 = pIn;
-      md_val* pC2 = (md_val*) pC1->pNext();
+      md0_val* pC1 = pIn;
+      md0_val* pC2 = (md0_val*) pC1->pNext();
 
       //lower cell
-        md_val* ptmp = (md_val*) pC1->pPriv();
+        md0_val* ptmp = (md0_val*) pC1->pPriv();
         if (ptmp != NULL)
             {
               ptmp->pNext((void*) pC2);
@@ -395,7 +528,7 @@ void  filterValue::inc(md_val* pIn)
             }
         pC2->pPriv(ptmp);
       //upper next cell
-        ptmp = (md_val*) pC2->pNext();
+        ptmp = (md0_val*) pC2->pNext();
         if (ptmp != NULL)
             {
               ptmp->pPriv((void*) pC1);
