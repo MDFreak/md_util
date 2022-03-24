@@ -17,6 +17,12 @@
       #define TRUE     1
       #define FALSE    0
 
+      #define MD_UNDEF -1 // default  used for user interface
+      #define MD_DEF   0  // default  used for user interface
+      #define MD_SEL   1  // selected
+      #define MD_RDY   2  // ready
+      #define MD_EME   3  // emergency
+
       #define OBJFREE  0 // modes for task handshake
       #define OBJBUSY  1
       #define OBJDEF   2
@@ -36,7 +42,6 @@
       #define UTC_TIMEZONE      3600           // +1 hour
       #define UTC_SUMMERTIME    3600           // +1 hour
       #define UTC_WINTERTIME    0
-
 
       enum ret_t
         {
