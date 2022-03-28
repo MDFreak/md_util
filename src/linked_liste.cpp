@@ -191,6 +191,8 @@
         }
     }
 
+// --- class md_cell1           /* Abstrakte Basisklasse fuer Listenelemente */
+// --- class md_list1
 // --- class smal_list
   // --- constructor / destructor
     template<typename T>
@@ -665,7 +667,6 @@
       this->sorted = true;
     }
 
-//#endif // ifndef SimpleList_h
 
 /* EOF */
 

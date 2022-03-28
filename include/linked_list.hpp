@@ -53,7 +53,7 @@
     {
       OFIRST = FALSE,      // function call
       OMAX   = 0x7FFF, // = int16 max
-      OLAST  =  OMAX
+      OLAST  =  OMAX,
     };
 
   #define MD_DEBUG          TRUE
@@ -88,7 +88,7 @@
     //
     class md_list
       {
-        private:
+        protected:
           md_cell* _pFirst = NULL;
           md_cell* _pLast  = NULL;
           uint16_t _count  = 0;
@@ -111,6 +111,176 @@
 
         private:
           void     doIdx ();
+      };
+
+  // --- base classes md_cell1, md_list1
+    template<typename T>
+    class md_cell1           /* Abstrakte Basisklasse fuer Listenelemente */
+      {
+        private:
+          T    _pNext  = NULL;   // Pointer auf naechstes Listenelement
+          T    _pPriv  = NULL;
+          uint8_t _idx = 0;
+          T    _obj    = NULL;
+
+        public:
+          md_cell1(T p) { _obj = p; init(); }
+          ~md_cell1()   { }
+
+          T       pNext (void)
+                        { return (void*) _pNext; }
+          T       pPriv (void)
+                        { return (void*) _pPriv; }
+          void    pNext (T pNext)
+                        { _pNext = pNext; }
+          void    pPriv (T pPriv)
+                        { _pPriv = pPriv; }
+          uint8_t index (void);
+                        { return _idx; }
+          void    index (uint8_t idx);
+                        { _idx = idx; }
+          T       getobj(void);
+                        { return _obj; }
+          void    setobj(T obj);
+                        { _obj = obj; }
+
+        private:
+          void    init();
+                        { _pNext = _pPriv  = NULL; }
+      };
+
+    //
+    template<typename T>
+    class md_list1
+      {
+        protected:
+          T        _pFirst = NULL;
+          T        _pLast  = NULL;
+          uint16_t _count  = 0;
+          uint8_t  _mode   = OBJDEF;
+
+        public:
+          md_list1(T p)  { _pFirst = _pLast = NULL; _count = 0; } // Konstruktor
+          ~md_list1() {}
+
+          uint8_t  count  ()
+                        { return _count; }
+          uint8_t  mode   ()
+                        { return _mode; }
+          void     setmode(uint8_t newmode = OBJUSER)
+                        { if (newmode == OBJUSER) { _mode = OBJUSER; } else { _mode = OBJDEF; } }
+          T        pFirst ()
+                        { return _pFirst; }
+          T        pLast  ()
+                        { return _pLast; }
+          void     pFirst (T newpFirst)
+                        { _pFirst = newpFirst; }
+          void     pLast  (T newpLast)
+                        { _pLast = newpLast; }
+          T        pIndex (uint8_t idx)
+                        {
+                          T ptmp = _pFirst;
+                                  //SOUT(" pIndex pFirst "); SOUTHEX((uint32_t) ptmp);
+                          while (ptmp != NULL)
+                            { //SOUT(" ptmp->idx "); SOUT(ptmp->index());
+                              if (ptmp->index() == idx)
+                                {
+                                  break;
+                                }
+                              ptmp = ptmp->pNext();
+                                  //SOUT(" pNext "); SOUTHEX((uint32_t) ptmp);
+                            }
+                                  //SOUTLN();
+                          return ptmp;
+                        }
+          ret_t    add    (T pCell)
+                        {
+                                    #if (LL_DEBUG > CFG_DEBUG_NONE)
+                                        SOUT("   md_list1 before add: count ");
+                                        SOUT(_count);SOUT(" pFirst "); SOUTHEX((u_long) _pFirst); SOUT(" plast "); SOUTHEXLN((u_long) _pLast);
+                                      #endif
+                          if (_pLast == NULL)            /* wenn noch kein Listenelement eingetragen */
+                              {
+                                _pFirst = _pLast = (md_cell*) pCell;
+                                _pLast->index(_count);
+                                _count++;
+                              }
+                            else
+                              {
+                                _pLast->pNext(pCell);
+                                md_cell* ptmp = (md_cell*) pCell;
+                                ptmp->pPriv((void*) _pLast);
+                                ptmp->pNext(NULL);
+                                _pLast = ptmp;
+                                _pLast->index(_count);
+                                _count++;
+                              }
+                                    #if (LL_DEBUG > CFG_DEBUG_NONE)
+                                        SOUT("   md_list1 after add: count ");
+                                        SOUT(_count);SOUT(" pFirst "); SOUTHEX((u_long) _pFirst); SOUT(" plast "); SOUTHEXLN((u_long) _pLast);
+                                    #endif
+                          return ISOK;
+                        }
+          ret_t    rem    (T inCell, uint8_t idx = 255)
+                        {
+                          ret_t ret = ISERR;
+                          T ptmp  = NULL;
+                          T pcell = pFirst;
+                                    #if (IP_DEBUG > CFG_DEBUG_NONE)
+                                      SOUT(millis()); SOUT(" md_list1 remove ");
+                                    #endif
+                          while (pcell != NULL)
+                            {
+                              if ( (inCell == pcell) || (idx == pcell->index()) )
+                                {
+                                  if (pcell == pFirst)
+                                      {
+                                        pFirst = pcell->pNext;
+                                      }
+                                    else
+                                      {
+                                        ptmp = pcell->pPriv();
+                                        ptmp->pNext(pcell->pNext);
+                                      }
+                                  if (pcell == pLast)
+                                      {
+                                        pLast = pcell->pPriv;
+                                      }
+                                    else
+                                      {
+                                        ptmp = pcell->pNext();
+                                        ptmp->pPriv(pcell->pPriv);
+                                      }
+                                  if (_count > 0) _count--;
+                                  ret = ISOK;
+                                }
+                            }
+                          doIdx();
+                          return ret;
+                        }
+          ret_t    rem (OPOS_t first = OFIRST)
+                        {
+                          if      (first == OFIRST) { return rem(_pFirst, 0); }
+                          else if (first == OLAST)  { return rem(_pLast,  0); }
+                        }
+          ret_t    rem (uint8_t idx)
+                        {
+                          return rem(NULL, idx);
+                        }
+
+        private:
+          void     doIdx ()
+                        { // renew idx to members
+                          uint8_t myIdx = 0;
+                          T       ptmp  = _pFirst;
+                          while (ptmp != NULL)
+                            {
+                              ptmp->index(myIdx);
+                              myIdx++;
+                              ptmp = ptmp->pNext();
+                            }
+                        }
+
       };
 
 
@@ -139,7 +309,7 @@
 
           virtual void setCompare(int (* compare)(T& a, T& b));
 
-          virtual int size();
+          virtual int  size();
           virtual bool isSorted();
           virtual bool isEmpty();
 
