@@ -1,6 +1,7 @@
 #ifndef _MD_DEFINES_H_
   #define _MD_DEFINES_H_
   #include <Arduino.h>
+  #include <unistd.h>
   //#include <stdint.h>
 
   #ifndef CFG_DEFS
@@ -16,6 +17,9 @@
 
       #define TRUE     1
       #define FALSE    0
+
+      #define STOP     1
+      #define RUN      0
 
       #define MD_UNDEF -1 // default  used for user interface
       #define MD_DEF   0  // default  used for user interface
@@ -42,6 +46,8 @@
       #define UTC_TIMEZONE      3600           // +1 hour
       #define UTC_SUMMERTIME    3600           // +1 hour
       #define UTC_WINTERTIME    0
+
+      #define MSG_MAXLEN        100
 
       enum ret_t
         {
@@ -215,7 +221,7 @@
             #define  OLED_096_MAXCOLS         30
             #define  OLED_096_MAXROWS         6
 
-          #define  MC_UO_OLED_130_AZ        MC_PW_3V3 + MC_MOD_UOUT + 0x0008u
+          #define  MC_UO_OLED_130_AZ        MC_PW_3V3 + MC_MOTY_UOUT + 0x0008u
             #define  OLED_130_GEO             GEO_128_64
             #define  OLED_130_DRV             OLED_DRV_1106
             #define  OLED_130_MAXCOLS         30
@@ -247,6 +253,8 @@
           #define  I2C_Si1145_LQ_60         0x60
           #define  I2C_DS3231_RTC_68        0x68
           #define  I2C_BME280               0x76
+          #define  I2C_OLED_78              0x78
+          #define  I2C_OLED_7A              0x7A
           #define  I2C_FRAM_7C              0x7C
           #define  I2C_DEV_NN               0xFF
       // --- music defines

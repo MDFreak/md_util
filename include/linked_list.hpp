@@ -135,17 +135,17 @@
                         { _pNext = pNext; }
           void    pPriv (T pPriv)
                         { _pPriv = pPriv; }
-          uint8_t index (void);
+          uint8_t index (void)
                         { return _idx; }
-          void    index (uint8_t idx);
+          void    index (uint8_t idx)
                         { _idx = idx; }
-          T       getobj(void);
+          T       getobj(void)
                         { return _obj; }
-          void    setobj(T obj);
+          void    setobj(T obj)
                         { _obj = obj; }
 
         private:
-          void    init();
+          void    init()
                         { _pNext = _pPriv  = NULL; }
       };
 

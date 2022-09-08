@@ -53,10 +53,14 @@ uint8_t scanI2C(uint8_t no, uint8_t _start, uint8_t _stop, uint8_t sda, uint8_t 
     //dict_list devlist;
 
     uint8_t i = 0;
+    uint8_t ec;
+            SOUTLN("Scanning I2C ");
     if (no > 0)
       {
         TwoWire I2C = TwoWire(no-1);
-        I2C.begin(sda,scl,400000);
+        I2C.setPins((int) sda, (int) scl);
+        //printfI2C.begin(sda,scl,400000);
+        I2C.begin(200000);
         #if (MD_UTIL_DEBUG > CFG_DEBUG_NONE)
             SOUTLN();
             SOUT("Scanning I2C Addresses Channel "); SOUTLN(no);
@@ -64,8 +68,8 @@ uint8_t scanI2C(uint8_t no, uint8_t _start, uint8_t _stop, uint8_t sda, uint8_t 
         //uint8_t cnt=0;
         for(i = _start; i < _stop ; i++)
           {
-            I2C.beginTransmission(i);
-            uint8_t ec=I2C.endTransmission(true);
+            I2C.beginTransmission((int)i);
+            ec=I2C.endTransmission(true);
             if(ec==0)
               {
                 #if (MD_UTIL_DEBUG > CFG_DEBUG_NONE)
