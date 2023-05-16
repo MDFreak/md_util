@@ -147,6 +147,7 @@
         private:
           void    init()
                         { _pNext = _pPriv  = NULL; }
+                        //{ _pNext = NULL; }
       };
 
     //

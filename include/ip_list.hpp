@@ -23,8 +23,9 @@
   #define _IPLIST_HPP_
 
   #include <linked_list.hpp>
-
-  #define LOGINTXT_MAX_LEN 30
+  #ifndef LOGINTXT_MAX_LEN
+      #define LOGINTXT_MAX_LEN 30
+    #endif
   #define MDIP_DEBUG CFG_DEBUG_NONE
   //#define MDIP_DEBUG CFG_DEBUG_STARTUP
   //#define MDIP_DEBUG CFG_DEBUG_ACTIONS

@@ -12,7 +12,7 @@
       #define NU      -1  // not used
       #define NC      -1  // not connected
       #define UNDEF    0
-      #define OFF                                                    0  // not active
+      #define OFF      0  // not active
       #define ON       1  // active
 
       #define TRUE     1
@@ -24,19 +24,28 @@
       #define MD_UNDEF -1 // default  used for user interface
       #define MD_DEF   0  // default  used for user interface
       #define MD_SEL   1  // selected
-      #define MD_RDY   2  // ready
-      #define MD_EME   3  // emergency
+      #define MD_WRN   2  // warning
+      #define MD_PAS   3  // emergency
+      #define MD_RDY   4  // ready
+      #define MD_OK    0
+      #define MD_NORM  0
+      #define MD_NCON  7  // not connected
+      #define MD_SIM   253
+      #define MD_WAIT  254
+      #define MD_ERR   255 // uint8_t maxval
+      #define MD_F_MAX std::numeric_limits<float>::min()
 
       #define OBJFREE  0 // modes for task handshake
       #define OBJBUSY  1
       #define OBJDEF   2
       #define OBJUSER  3
 
-      #define SWITCH  TRUE
+      #define SWITCH   TRUE
 
-      #define CR       13 // carrige return
-      #define LF       10 // line feed
-      #define LN       LF
+      //#define CR       13 // carrige return
+      //#define LF       10 // line feed
+      //#define LN       LF
+      #define LN       10
       #define U3V3     3
       #define U5V      5
 
@@ -59,33 +68,6 @@
         } ;
 
       // typedef data types
-        /*
-          #ifndef int8_t
-            typedef char int8_t;
-          #endif
-          #ifndef uint8_t
-            typedef unsigned char uint8_t;
-          #endif
-          #ifndef int16_t
-            typedef short int16_t;
-          #endif
-          #ifndef uint16_t
-            typedef unsigned short uint16_t;
-          #endif
-          #ifndef int32_t
-            typedef int int32_t;
-          #endif
-          #ifndef uint32_t
-            typedef unsigned int uint32_t;
-          #endif
-          #ifndef int64_t
-            typedef long int64_t;
-          #endif
-          #ifndef uint64_t
-            typedef unsigned long uint64_t;
-          #endif
-          */
-
         typedef enum dattype
           {
             DT_UNDEF   = 0,
@@ -108,7 +90,9 @@
             DT_END
           } dattype_t;
 
-      #define DEBUG   TRUE
+      #ifndef DEBUG
+          #define DEBUG   FALSE
+        #endif
       #define NODEBUG FALSE
 
       #define CFG_DEBUG_NONE    0
@@ -126,15 +110,28 @@
         #define GEO_64_48     2
         #define GEO_64_32     3
         #define GEO_RAWMODE   4
+        #define TEMP_ABS_NULL -273.15f
     // **********************************************
     // --- macros
       #define SET(b)      (b = true)
       #define RESET(b)    (b = false)
 
-      #define SOUT(c)     (Serial.print(c))
-      #define SOUTHEX(c)  (Serial.print(c, HEX))
-      #define SOUTLN(c)   (Serial.println(c))
-      #define SOUTHEXLN(c)(Serial.println(c, HEX))
+      #define SOUT(c)             (Serial.print(c))
+      #define SOUTHEX(c)          (Serial.print(c, HEX))
+      #define SOUTLN(c)           (Serial.println(c))
+      #define SOUTHEXLN(c)        (Serial.println(c, HEX))
+      #define SFLUSH()            (Serial.flush())
+      #define STLN(t)             (SOUTLN(t), SFLUSH())
+      #define STX(t)              (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "))
+      #define STXT(t)             (SOUT(millis()), SOUT(" "), SOUTLN(t),SFLUSH())
+      #define SVAL(t,v)           (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUTLN(v),   SFLUSH())
+      #define SHEXVAL(t,v)        (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUTHEXLN(v),SFLUSH())
+      #define S2VAL(t,v,w)        (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUT(v),     SOUT(" "), SOUTLN(w),   SFLUSH())
+      #define S2HEXVAL(t,v,w)     (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUTHEX(v),  SOUT(" "), SOUTHEXLN(w),SFLUSH())
+      #define S3VAL(t,v,w,q)      (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUT(v),     SOUT(" "), SOUT(w),     SOUT(" "), SOUTLN(q),   SFLUSH())
+      #define S3HEXVAL(t,v,w,q)   (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUTHEX(v),  SOUT(" "), SOUTHEX(w),  SOUT(" "), SOUTHEXLN(q),SFLUSH())
+      #define S4VAL(t,v,w,q,r)    (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUT(v),     SOUT(" "), SOUT(w),     SOUT(" "), SOUT(q),   SOUT(" "), SOUTLN(r),   SFLUSH())
+      #define S4HEXVAL(t,v,w,q,r) (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUTHEX(v),  SOUT(" "), SOUTHEX(w),  SOUT(" "), SOUTHEX(q),SOUT(" "), SOUTHEXLN(r),SFLUSH())
 
       #define MDFILLARR(a,n) a[0]=n, memcpy( ((char*)a) + sizeof(a[0]), a, sizeof(a)-sizeof(a[0]) );
 
@@ -196,9 +193,10 @@
       // --- user output parts (MC_MOTY_UOUT)
         // --- TFT displays
           #define  MC_UO_TFT1602_I2C_XA    MC_PW_3V3 + MC_MOTY_UOUT + 0x0001u
-          #define  MC_UO_TFT1602_GPIO_RO   MC_PW_3V3 + MC_MOTY_UOUT + 0x0002u + MC_PW_5V  // used by KEYPADSHIELD
+          #define  MC_UO_TFT1602_GPIO_RO   MC_PW_3V3 + MC_MOTY_UOUT + 0x0002u + MC_PW_5V // used by KEYPADSHIELD
           #define  MC_UO_TXPT2046_AZ_SPI   MC_PW_3V3 + MC_MOTY_UOUT + 0x0003u   // used by Arduino-touch-case
           #define  MC_UO_TXPT2046_AZ_UNO   MC_PW_3V3 + MC_MOTY_UOUT + 0x0004u   // used by Arduino-touch-case
+          #define  MC_UO_Keypad_ANA0_RO    MC_PW_3V3 + MC_MOTY_UOUT  + 0x0005u + MC_PW_5V // used by KEYPADSHIELD
         // --- OLED displays
           #define  OLED_DRV_1106              1106
           #define  OLED_DRV_1306              1306
@@ -239,6 +237,7 @@
 
     // **********************************************
     // --- configuration and HW spezific defines
+
       // --- I2C devices
           #define  I2C1                     1           // I2C device 1
           #define  I2C2                     2           // I2C device 2
@@ -246,13 +245,21 @@
           #define  I2C_OLED_3C              0x3C
           #define  I2C_OLED_3D              0x3D
           #define  I2C_HDC1080_HUM_40       0x40
+          #define  I2C_INA3221_41           0x41
+          #define  I2C_INA3221_42           0x42
+          #define  I2C_INA3221_43           0x43
+          #define  I2C_ADS1115_48           0x48
+          #define  I2C_ADS1115_49           0x49
+          #define  I2C_ADS1115_4A           0x4A
+          #define  I2C_ADS1115_4B           0x4B
           #define  I2C_FRAM_50              0x50
           #define  I2C_AT24C32_57           0x57
           #define  I2C_CCS811_AQ_5A         0x5A
           #define  I2C_MLX90614_5B          0x5B
-          #define  I2C_Si1145_LQ_60         0x60
+          #define  I2C_SI1145_LQ_60         0x60
           #define  I2C_DS3231_RTC_68        0x68
-          #define  I2C_BME280               0x76
+          #define  I2C_BME280_76            0x76
+          #define  I2C_BME680_77            0x77
           #define  I2C_OLED_78              0x78
           #define  I2C_OLED_7A              0x7A
           #define  I2C_FRAM_7C              0x7C
