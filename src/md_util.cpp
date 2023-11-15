@@ -7,16 +7,17 @@
 //--------------------------
 // binary / hex tools
   // --- monitor dump HEX streams
-    void serHEXdump(const uint8_t* pData, size_t length)
+    void serHEXdump(const uint8_t* pData, size_t length, uint8_t use_LF)
       {
-        Serial.println();
+        if (use_LF > FALSE)  Serial.println();
         for (int i=1; i<=length; i++)
           {
-            Serial.printf("%02x", pData[i-1]);
+            Serial.printf("%02x ", pData[i-1]);
             if(i % 2 == 0) { Serial.print(" "); }
             if(i % 16 == 0){ Serial.println();  }
           }
-        Serial.println();
+        if (use_LF > FALSE)  Serial.println();
+        else Serial.print("    ");
       }
   // --- handle binary strings
     char* getBinStr(char* pstr, uint8_t val, bool _debug)

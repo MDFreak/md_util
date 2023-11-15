@@ -9,7 +9,7 @@
   //--------------------------
   // binary / hex tools
     // --- monitor dump HEX streams
-      void     serHEXdump(const uint8_t* pData, size_t length);
+      void     serHEXdump(const uint8_t* pData, size_t length, uint8_t use_LF = TRUE);
     // --- handle binary strings
       char*    getBinStr(char* pstr, uint8_t val, bool _debug = FALSE);
       char*    getBinStr(char* pstr, uint16_t val, bool _debug = FALSE);
