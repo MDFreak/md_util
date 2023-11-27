@@ -189,7 +189,7 @@
           #define  MC_ESP32_D1_R32   MC_PW_3V3 + MC_UC_ESP32 + 0x0003 // UNO compatible
           #define  MC_ESP32_LORA     MC_PW_3V3 + MC_UC_ESP32 + 0x0004
           #define  MC_ESP32_D1_MINI  MC_PW_3V3 + MC_UC_ESP32 + 0x0005
-          #define  MC_ESP32_AZTOUCH  MC_PW_3V3 + MC_UC_ESP32 + 0x0006
+          //#define  MC_ESP32_AZTOUCH  MC_PW_3V3 + MC_UC_ESP32 + 0x0006
       // --- user output parts (MC_MOTY_UOUT)
         // --- TFT displays
           #define  MC_UO_TFT1602_I2C_XA    MC_PW_3V3 + MC_MOTY_UOUT + 0x0001u
@@ -239,8 +239,8 @@
     // --- configuration and HW spezific defines
 
       // --- I2C devices
-          #define  I2C1                     1           // I2C device 1
-          #define  I2C2                     2           // I2C device 2
+          #define  DEV_I2C1                 0           // I2C device 1
+          #define  DEV_I2C2                 1           // I2C device 2
           //#define  I2C_TFT1602_IIC_XA_3V3   U_3V3  + 0
           #define  I2C_OLED_3C              0x3C
           #define  I2C_OLED_3D              0x3D

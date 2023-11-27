@@ -41,40 +41,6 @@
         uint64_t  getTout();
     };
   // class touchpin handling of touch pin function (ESP32, ESP8266)
-  #if (BOARD ^ XIAO_ESP32C3)
-      class touchPin
-        {
-          private:
-            #define UP    1
-            #define DOWN -1
-
-            int8_t  _pin    = NN;
-            int8_t  _hold   = 1;
-            int8_t  _cnt    = 0;
-            int8_t  _value  = 0;
-            int8_t  _state  = 0;    //  OFF < (0) > ON
-            int8_t  _limit  = 35;    //  OFF < (0) > ON
-            int8_t  _toggle = FALSE;
-            int8_t  _mark   = FALSE;
-
-          public:
-            touchPin(uint8_t IOpin) { _pin = IOpin; }
-            ~touchPin() {}
-
-            void    init(bool isSwitch = FALSE, uint8_t holdCnt=5, uint8_t limit=35);
-            void    reset();
-            void    setHold(uint8_t holdCnt);
-            void    setLimit(uint8_t limit);
-            void    read();
-            uint8_t state();
-            uint8_t value();
-            uint8_t pin();
-        };
-      // class md_value
-        // stores a value with max 32 bit values
-        // types int8, int16, int32, char[4], uint8, uint16, uint32
-        // char[4], char*, void*
-    #endif
 /*
     // C++ program to pass function as a
     // pointer to any function
