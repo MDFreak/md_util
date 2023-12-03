@@ -41,7 +41,8 @@
    *   - FILT_NU:      filter not used
    *   - FILT_FL_MEAN: floating mean value, possible max/min drop
    *   - FILT_STD_DEV: standard deviation
-   */  typedef enum filtertype
+   */
+  typedef enum filtertype
     {
       FILT_NU        = 0,  // not used
       FILT_FL_MEAN,        // floating mean value, possible max/min drop
@@ -68,7 +69,6 @@
         float scale(float val)
                   { return (( val + _offsetRaw) * _gain + _offsetReal); }
     };
-
   class md_val // : public md_scale
     {
       private:
@@ -84,7 +84,6 @@
         float     _offsetRaw   = 0;
         float     _gain        = 1;
         float     _offsetReal  = 0;
-
       public:
                 md_val() {}
                 ~md_val()
@@ -92,7 +91,6 @@
                     if (_pvals != NULL) { delete _pvals;  }
                     if (_psort != NULL) { delete _psort; }
                   }
-
         void    begin(uint8_t numFilts = 0, uint8_t numDrops = 0, filter_t filtType = FILT_NU)
                   {
                     if (numFilts > 1)
@@ -106,7 +104,6 @@
                             _psort[i] = 0;
                           }
                       }
-
                     _numFilts = numFilts;
                     if (numFilts > 2 * numDrops)
                       {
@@ -128,10 +125,8 @@
                     _cnt      = 0;
 
                   }
-
         float   getVal()
                   { return _val; }
-
         float   doVal (float newVal)
                   {
                     // no filter with return
@@ -142,7 +137,6 @@
                         return getVal();
                           //SOUTLN(" single ");
                       }
-
                     // sorted filter - 0 ~ smallest
                     else
                       {
@@ -164,7 +158,6 @@
                               { _sIdx++; }
                                 //SOUT(" _vIdx "); SOUT(_vIdx); SOUT(" _sIdx "); SOUT(_sIdx);
                           }
-
                         // write new value
                         _pvals[_vIdx] = newVal;
                             //SOUT(" newVal "); SOUTLN(_pvals[_psort[_sIdx]]);
@@ -178,7 +171,6 @@
                                 //SOUT(" _vIdx "); SOUT(_vIdx); SOUT(" _sIdx "); SOUT(_sIdx);
                                 //SOUT(" _cnt "); SOUTLN(_cnt);
                           }
-
                             //SOUTLN(" vor Sort ");
                             //for ( uint8_t i = 0; i < _cnt ; i++ )
                             //  { SOUT(_psort[i]); SOUT(" - "); SOUTLN(_pvals[_psort[i]]); }
@@ -186,12 +178,10 @@
                             //SOUTLN(" nach Sort ");
                             //for ( uint8_t i = 0; i < _cnt ; i++ )
                             //  { SOUT(_psort[i]); SOUT(" - "); SOUTLN(_pvals[_psort[i]]); }
-
                         _calc();
                       }
                     return getVal();
                   }
-
         void    clear ()
                   {
                     if (_pvals != NULL)
@@ -205,7 +195,6 @@
                         _cnt     = 0;
                       }
                   }
-
         uint8_t count ()
                   {
                     return _cnt;
@@ -240,7 +229,6 @@
                           }
                       }
                     state |= 1;
-
                     if ( state < 3 )
                       {
                         for ( int8_t i = idx - 1 ; i >= 0 ; i-- )
@@ -262,14 +250,12 @@
                           }
                       }
                   }
-
         void    _swapSort (uint8_t idx1, uint8_t idx2)
                   {
                     uint8_t tmp  = _psort[idx1];
                     _psort[idx1] = _psort[idx2];
                     _psort[idx2] = tmp;
                   }
-
         void    _calc ()
                   {
                     if (_cnt < 1) { return; }
@@ -297,7 +283,6 @@
                                 //SOUT(" _val "); SOUTLN(_val);
                       }
                   }
-
         /*T*      scale(T* pValue)
                   {
                     *pValue = (T) (  ((double) *pValue + (double) _offsetRaw )
@@ -306,7 +291,6 @@
                   }
           */
     };
-
   #ifdef UNUSED  // class md0_val and filtervalue is replaced by md_val
     // class md0_val
       /*---------------------------------------------------------------------
