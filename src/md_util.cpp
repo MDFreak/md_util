@@ -1,7 +1,10 @@
 #include <Arduino.h>
 #include <wire.h>
 #include <md_util.h>
-#include <dict_list.hpp>
+
+#ifdef USE_DICT_LIST
+    #include <dict_list.hpp>
+  #endif
 
 #ifndef DEBUG_MODE
     #define DEBUG_MODE CFG_DEBUG_STARTUP
@@ -168,7 +171,8 @@
     #endif // UNUSED
 // --- scan I2C - serial output
       //uint8_t scanI2C(uint8_t no, uint8_t _start, uint8_t _stop, uint8_t sda, uint8_t scl)
-  uint8_t scanI2C(TwoWire *i2c, uint8_t sda, uint8_t scl)
+  #ifdef USE_I2C
+      uint8_t scanI2C(TwoWire *i2c, uint8_t sda, uint8_t scl)
     {
       //dict_list devlist;
 
@@ -234,42 +238,44 @@
         }
       return i;
     }
+    #endif
 // --- class msTimer
-  msTimer::msTimer()
-    {
-      startT(0);
-    }
-  msTimer::msTimer(const uint64_t inTOut)
-    {
-      startT(inTOut);
-    }
-  bool msTimer::TOut()
-    {
-      if ((millis() - _tstart) > _tout)
-        return true;
-      else
-        return false;
-    }
-  void msTimer::startT()
-    {
-      _tstart = millis();
-    }
-  void msTimer::startT(const uint64_t inTOut)
-    {
-      _tstart = millis();
-      _tout   = inTOut;
-    }
-  uint64_t msTimer::getTact()
-    {
-      return millis() - _tstart ;
-    }
-  uint64_t msTimer::getTout()
-    {
-      return millis() - _tout ;
-    }
-//
+  #ifdef USE_UTIL_TIMER
+      msTimer::msTimer()
+        {
+          startT(0);
+        }
+      msTimer::msTimer(const uint64_t inTOut)
+        {
+          startT(inTOut);
+        }
+      bool msTimer::TOut()
+        {
+          if ((millis() - _tstart) > _tout)
+            return true;
+          else
+            return false;
+        }
+      void msTimer::startT()
+        {
+          _tstart = millis();
+        }
+      void msTimer::startT(const uint64_t inTOut)
+        {
+          _tstart = millis();
+          _tout   = inTOut;
+        }
+      uint64_t msTimer::getTact()
+        {
+          return millis() - _tstart ;
+        }
+      uint64_t msTimer::getTout()
+        {
+          return millis() - _tout ;
+        }
+    #endif // USE_UTIL_TIMER
 // class touchpin TODO test
-  #if (USE_TOUCHPIN > OFF)
+  #ifdef USE_TOUCHPIN
       void touchPin::init(bool isSwitch, uint8_t holdCnt, uint8_t limit)
         {
           _toggle = isSwitch;
@@ -285,7 +291,6 @@
         {
           _cnt = 0;
         }
-
       void touchPin::setHold(uint8_t holdCnt)
         {
           _hold = holdCnt;
@@ -316,7 +321,6 @@
           _cnt += state;
                   SOUT(" state "); SOUT(state); SOUT(" _cnt "); SOUT(_cnt);
                   SOUT(" mark "); SOUT(_mark); SOUT(" toggle "); SOUTHEXLN(_toggle);
-
           if ( !_toggle && (_cnt > _hold) )
             {
               _state = OFF;

@@ -115,7 +115,6 @@
     // --- macros
       #define SET(b)      (b = true)
       #define RESET(b)    (b = false)
-
       #define SOUT(c)             (Serial.print(c))
       #define SOUTHEX(c)          (Serial.print(c, HEX))
       #define SOUTLN(c)           (Serial.println(c))
@@ -132,9 +131,7 @@
       #define S3HEXVAL(t,v,w,q)   (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUTHEX(v),  SOUT(" "), SOUTHEX(w),  SOUT(" "), SOUTHEXLN(q),SFLUSH())
       #define S4VAL(t,v,w,q,r)    (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUT(v),     SOUT(" "), SOUT(w),     SOUT(" "), SOUT(q),   SOUT(" "), SOUTLN(r),   SFLUSH())
       #define S4HEXVAL(t,v,w,q,r) (SOUT(millis()), SOUT(" "), SOUT(t),  SOUT(" "), SOUTHEX(v),  SOUT(" "), SOUTHEX(w),  SOUT(" "), SOUTHEX(q),SOUT(" "), SOUTHEXLN(r),SFLUSH())
-
       #define MDFILLARR(a,n) a[0]=n, memcpy( ((char*)a) + sizeof(a[0]), a, sizeof(a)-sizeof(a[0]) );
-
     // **********************************************
     // --- internal coding of HW defines
       //--------------------------------------------
@@ -185,7 +182,7 @@
         //
         // --- ESP32 boards           xx1x 0001 xxxx ||||
           #define  MC_ESP32S_Node    MC_PW_3V3 + MC_UC_ESP32 + 0x0001 // single core
-          #define  MC_ESP32_Node     MC_PW_3V3 + MC_UC_ESP32 + 0x0002
+          #define  MC_ESP32_NODE     MC_PW_3V3 + MC_UC_ESP32 + 0x0002
           #define  MC_ESP32_D1_R32   MC_PW_3V3 + MC_UC_ESP32 + 0x0003 // UNO compatible
           #define  MC_ESP32_LORA     MC_PW_3V3 + MC_UC_ESP32 + 0x0004
           #define  MC_ESP32_D1_MINI  MC_PW_3V3 + MC_UC_ESP32 + 0x0005
@@ -196,11 +193,12 @@
           #define  MC_UO_TFT1602_GPIO_RO   MC_PW_3V3 + MC_MOTY_UOUT + 0x0002u + MC_PW_5V // used by KEYPADSHIELD
           #define  MC_UO_TXPT2046_AZ_SPI   MC_PW_3V3 + MC_MOTY_UOUT + 0x0003u   // used by Arduino-touch-case
           #define  MC_UO_TXPT2046_AZ_UNO   MC_PW_3V3 + MC_MOTY_UOUT + 0x0004u   // used by Arduino-touch-case
-          #define  MC_UO_Keypad_ANA0_RO    MC_PW_3V3 + MC_MOTY_UOUT  + 0x0005u + MC_PW_5V // used by KEYPADSHIELD
-        // --- OLED displays
+          #define  MC_UO_Keypad_ANA0_RO    MC_PW_3V3 + MC_MOTY_UOUT + 0x0005u + MC_PW_5V // used by KEYPADSHIELD
+          #define  MC_UO_TFT_GC9A01A_SPI   MC_PW_3V3 + MC_MOTY_UOUT + 0x0006u   // round display 240x240 16bit colors
+        // --- OLED displays I2C
+      #ifdef USE_OLED_I2C
           #define  OLED_DRV_1106              1106
           #define  OLED_DRV_1306              1306
-
           #define  MC_UO_OLED_066_AZ        MC_PW_3V3 + MC_MOTY_UOUT + 0x0005u // IIC adress 0x3C,0x3D solder switch
             #define  OLED_066_GEO             GEO_64_48
             #define  OLED_066_DRV             OLED_DRV_1306
@@ -224,21 +222,19 @@
             #define  OLED_130_DRV             OLED_DRV_1106
             #define  OLED_130_MAXCOLS         30
             #define  OLED_130_MAXROWS         6
+        #endif // USE_OLED_I2C
       // --- user input parts (MC_MOTY_UIN)
         // --- keypads
           #define  MC_UI_Keypad_ANA0_RO    MC_PW_3V3 + MC_MOD_UIN + 0x0001u + MC_PW_5V // used by KEYPADSHIELD
-
         // --- touchpads
           #define  MC_UI_TXPT2046_AZ_SPI   MC_PW_3V3 + MC_MOD_UIN + 0x0002u  // used by Arduino-touch-case
           #define  MC_UI_TXPT2046_AZ_UNO   MC_PW_3V3 + MC_MOD_UIN + 0x0003u  // used by Arduino Uno shield
-
       // --- periferal outputs (MC_MOTY_POUT)
           #define  AOUT_PAS_BUZZ_3V5V      U_3V5V + 0x0001u  // used by Arduino-touch-case
-
     // **********************************************
     // --- configuration and HW spezific defines
-
       // --- I2C devices
+      #ifdef USE_I2C
           #define  DEV_I2C1                 0           // I2C device 1
           #define  DEV_I2C2                 1           // I2C device 2
           //#define  I2C_TFT1602_IIC_XA_3V3   U_3V3  + 0
@@ -264,14 +260,15 @@
           #define  I2C_OLED_7A              0x7A
           #define  I2C_FRAM_7C              0x7C
           #define  I2C_DEV_NN               0xFF
+        #endif // USE_I2C
       // --- music defines
-        // --- structures
-          typedef struct {
-            int8_t   note;     // NOTE_C .. NOTE_B
-            int8_t   octa;     // oktave 0 .. 7
-            uint64_t beat;     // MB1 = base
-          } tone_t;
-        // --- music units
+      #ifdef USE_AOUT        // --- structures
+          typedef struct
+            {
+              int8_t   note;     // NOTE_C .. NOTE_B
+              int8_t   octa;     // oktave 0 .. 7
+              uint64_t beat;     // MB1 = base
+            } tone_t;
           // --- beat units --------------------
             #define MUSIC_BASEBEAT_US       250000ul  // base beat of 1/4 note = 250 ms
             #define MUSIC_RATIO_P100        80          // 80% ON / 20% OFF
@@ -296,52 +293,52 @@
             #define OP4   MUSIC_BASE_OCTA - 4  // octave positiv 1
           // --- notes -------------------------
             #define PAUSE   -1
-        // --- songs
-    	    #define SONG_HAENSCHEN_KLEIN  0
-            const uint64_t SONG0_BEAT_US = MUSIC_BASEBEAT_US;
-            const tone_t   SONG0_NOTES[] =
-                { // Haenschen klein
-                  {NOTE_G ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
-                  {NOTE_F ,OP0,MB4 },{NOTE_D ,OP0, MB4 },{NOTE_D ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+          // --- songs
+      	    #define SONG_HAENSCHEN_KLEIN  0
+              const uint64_t SONG0_BEAT_US = MUSIC_BASEBEAT_US;
+              const tone_t   SONG0_NOTES[] =
+                  { // Haenschen klein
+                    {NOTE_G ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+                    {NOTE_F ,OP0,MB4 },{NOTE_D ,OP0, MB4 },{NOTE_D ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
 
-                  {NOTE_C ,OP0,MB4 },{NOTE_D ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{NOTE_F ,OP0, MB4 },
-                  {NOTE_G ,OP0,MB4 },{NOTE_G ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+                    {NOTE_C ,OP0,MB4 },{NOTE_D ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{NOTE_F ,OP0, MB4 },
+                    {NOTE_G ,OP0,MB4 },{NOTE_G ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
 
-                  {NOTE_G ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
-                  {NOTE_F ,OP0,MB4 },{NOTE_D ,OP0, MB4 },{NOTE_D ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+                    {NOTE_G ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+                    {NOTE_F ,OP0,MB4 },{NOTE_D ,OP0, MB4 },{NOTE_D ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
 
-                  {NOTE_C ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{NOTE_G ,OP0, MB4 },
-                  {NOTE_C ,OP0,MB42},                    { PAUSE ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+                    {NOTE_C ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{NOTE_G ,OP0, MB4 },
+                    {NOTE_C ,OP0,MB42},                    { PAUSE ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
 
-                  {NOTE_D ,OP0,MB4 },{NOTE_D ,OP0, MB4 },{NOTE_D ,OP0,MB4 },{NOTE_D ,OP0, MB4 },
-                  {NOTE_D ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_F ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+                    {NOTE_D ,OP0,MB4 },{NOTE_D ,OP0, MB4 },{NOTE_D ,OP0,MB4 },{NOTE_D ,OP0, MB4 },
+                    {NOTE_D ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_F ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
 
-                  {NOTE_E ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{NOTE_E ,OP0, MB4 },
-                  {NOTE_E ,OP0,MB4 },{NOTE_F ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+                    {NOTE_E ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{NOTE_E ,OP0, MB4 },
+                    {NOTE_E ,OP0,MB4 },{NOTE_F ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
 
-                  {NOTE_G ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
-                  {NOTE_F ,OP0,MB4 },{NOTE_D ,OP0, MB4 },{NOTE_D ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+                    {NOTE_G ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+                    {NOTE_F ,OP0,MB4 },{NOTE_D ,OP0, MB4 },{NOTE_D ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
 
-                  {NOTE_C ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{NOTE_G ,OP0, MB4 },
-                  {NOTE_C ,OP0,MB42},                    { PAUSE ,OP0,MB4 },{ PAUSE ,OP0, MB4 }
-                };
-              const uint16_t SONG0_LEN     = sizeof(SONG0_NOTES)/sizeof(tone_t);    //62;
-          #define SONG_ALLE_VOEGLEIN    1
-            const uint64_t SONG1_BEAT_US = MUSIC_BASEBEAT_US;
-            const tone_t   SONG1_NOTES[] =
-                { // Haenschen klein
-                  {NOTE_C ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{NOTE_C ,OP1, MB4 },
-                  {NOTE_B ,OP0,MB4 },{NOTE_C ,OP1, MB4 },{NOTE_B ,OP0,MB4 },{NOTE_G ,OP0, MB4 },
+                    {NOTE_C ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{NOTE_G ,OP0, MB4 },
+                    {NOTE_C ,OP0,MB42},                    { PAUSE ,OP0,MB4 },{ PAUSE ,OP0, MB4 }
+                  };
+                const uint16_t SONG0_LEN     = sizeof(SONG0_NOTES)/sizeof(tone_t);    //62;
+            #define SONG_ALLE_VOEGLEIN    1
+              const uint64_t SONG1_BEAT_US = MUSIC_BASEBEAT_US;
+              const tone_t   SONG1_NOTES[] =
+                  { // Haenschen klein
+                    {NOTE_C ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{NOTE_C ,OP1, MB4 },
+                    {NOTE_B ,OP0,MB4 },{NOTE_C ,OP1, MB4 },{NOTE_B ,OP0,MB4 },{NOTE_G ,OP0, MB4 },
 
-                  {NOTE_E ,OP0,MB4 },{NOTE_G ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{NOTE_C ,OP0, MB4 },
-                  {NOTE_D ,OP0,MB4 },{NOTE_C ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
+                    {NOTE_E ,OP0,MB4 },{NOTE_G ,OP0, MB4 },{NOTE_E ,OP0,MB4 },{NOTE_C ,OP0, MB4 },
+                    {NOTE_D ,OP0,MB4 },{NOTE_C ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{ PAUSE ,OP0, MB4 },
 
-                  {NOTE_C ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{NOTE_G ,OP0, MB4 },
-                  {NOTE_C ,OP0,MB42},                    { PAUSE ,OP0,MB4 },{ PAUSE ,OP0, MB4 }
-                };
-              const uint16_t SONG1_LEN     = sizeof(SONG1_NOTES)/sizeof(tone_t);    //62;
+                    {NOTE_C ,OP0,MB4 },{NOTE_E ,OP0, MB4 },{NOTE_G ,OP0,MB4 },{NOTE_G ,OP0, MB4 },
+                    {NOTE_C ,OP0,MB42},                    { PAUSE ,OP0,MB4 },{ PAUSE ,OP0, MB4 }
+                  };
+                const uint16_t SONG1_LEN     = sizeof(SONG1_NOTES)/sizeof(tone_t);    //62;
           //#define SONG_ALLE_ENTCHEN     2
+        #endif // USE_AOUT
     // **********************************************
   #endif // CFG_DEFS
-
 #endif   // _MD_DEFINES_H_

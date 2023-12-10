@@ -15,56 +15,53 @@
  *-----------------------------------------------------------------------
  * 0.1.0  |20.11.20| import from former project                 | MD
 *-----------------------------------------------------------------------*/
-#ifdef _DICT_LIST_HPP_
-//#ifndef _DICT_LIST_HPP_
+#ifndef _DICT_LIST_HPP_
   #define _DICT_LIST_HPP_
 
-  #include <stdlib.h>
-  #include <Arduino.h>
-  #include <md_defines.h>
-  #include <linked_list.hpp>
+  #ifdef USE_DICT_LIST
+      #include <stdlib.h>
+      #include <Arduino.h>
+      #include <md_defines.h>
+      #include <linked_list.hpp>
+      // --- dictionary classes dict_cell, dict_list
+        class dict_cell : public md_cell
+          {
+            private:
+              int16_t  _idx = (int16_t) NN;
+              char     _name[DICT_MAX_NAME_LEN+1] = "";
 
-  //
-  // --- dictionary classes dict_cell, dict_list
-    class dict_cell : public md_cell
-      {
-        private:
-          int16_t  _idx = (int16_t) NN;
-          char     _name[DICT_MAX_NAME_LEN+1] = "";
+            public:
+              dict_cell() {}
+              ~dict_cell() {}
 
-        public:
-          dict_cell() {}
-          ~dict_cell() {}
+              void    init   (int16_t idx, const char name[DICT_MAX_NAME_LEN]);
+              int16_t getIdx ()             { return _idx; }
+              void    getName(char* pname)  { strcpy( pname, _name); }
+              void    setIdx (int16_t idx)  { _idx = idx; }
+              void    setName(const char name[DICT_MAX_NAME_LEN]);
+          };
+        class dict_list : public md_list
+          {
+            private:
+              dict_cell* _pFirst;
+              dict_cell* _pLast;
 
-          void    init   (int16_t idx, const char name[DICT_MAX_NAME_LEN]);
-          int16_t getIdx ()             { return _idx; }
-          void    getName(char* pname)  { strcpy( pname, _name); }
-          void    setIdx (int16_t idx)  { _idx = idx; }
-          void    setName(const char name[DICT_MAX_NAME_LEN]);
-      };
+            public:
+              dict_list();
+              ~dict_list();
 
-    class dict_list : public md_list
-      {
-        private:
-          dict_cell* _pFirst;
-          dict_cell* _pLast;
+              void    append( int16_t idx, const char name[DICT_MAX_NAME_LEN]);
+              int16_t getIdx (const char name[DICT_MAX_NAME_LEN]);
+              void    getName(int16_t idx, char* pname);
+              void    setIdx (const char name[DICT_MAX_NAME_LEN], int16_t idx);
+              void    setName(int16_t idx, const char name[DICT_MAX_NAME_LEN]);
+              dict_cell* getCellPointer( unsigned short index);
+              dict_cell* getNextCellPointer( dict_cell* pCell );
 
-        public:
-          dict_list();
-          ~dict_list();
+            protected:
+              dict_cell* _findCell(int16_t idx);
+              dict_cell* _findCell(const char name[]);
 
-          void    append( int16_t idx, const char name[DICT_MAX_NAME_LEN]);
-          int16_t getIdx (const char name[DICT_MAX_NAME_LEN]);
-          void    getName(int16_t idx, char* pname);
-          void    setIdx (const char name[DICT_MAX_NAME_LEN], int16_t idx);
-          void    setName(int16_t idx, const char name[DICT_MAX_NAME_LEN]);
-          dict_cell* getCellPointer( unsigned short index);
-          dict_cell* getNextCellPointer( dict_cell* pCell );
-
-        protected:
-          dict_cell* _findCell(int16_t idx);
-          dict_cell* _findCell(const char name[]);
-
-      };
-
-#endif
+          };
+    #endif // USE_DICT_LIST
+#endif // _DICT_LIST_HPP_

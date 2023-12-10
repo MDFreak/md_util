@@ -18,24 +18,19 @@
 *-----------------------------------------------------------------------*/
 
 #include <ip_list.hpp>
-
-// ---------------------------
-// class ip_cell
+// --- class ip_cell
   ip_cell::ip_cell() : md_cell()
     {
                 #if (MDIP_DEBUG > CFG_DEBUG_NONE)
                   SOUT(millis()); SOUT(" ip_cell new "); SOUTHEXLN((u_long) this);
                 #endif
     }
-
   ip_cell::~ip_cell()
     {
                 #if (MDIP_DEBUG > CFG_DEBUG_NONE)
                   SOUT(millis()); SOUT(" ip_cell del me "); SOUTHEXLN((u_long) this);
                 #endif
     }
-
-//
   void ip_cell::init(uint32_t locIP, uint32_t gwIP, uint32_t snIP, const char* ssid, const char* pw)
     {
       if (strlen(ssid) > LOGINTXT_MAX_LEN)
@@ -59,7 +54,6 @@
                   SOUT(millis()); SOUT(" ip_cell init _locIP "); SOUTHEX(_locIP); SOUT("  _ssid "); SOUTLN(_ssid);
                 #endif
     }
-
   void ip_cell::getSSID(char* ssid, uint8_t maxlen)
     {
       if (maxlen >= strlen(_ssid))
@@ -70,7 +64,6 @@
             SOUT("len _ssid '"); SOUT(_ssid); SOUT("' to long ("); SOUT(maxlen); SOUTLN(")");
           }
     }
-
   void ip_cell::getPW(char* pw, uint8_t maxlen)
     {
       if (maxlen >= strlen(_pw))
@@ -82,15 +75,13 @@
           }
     }
 
-// ---------------------------
-// class ip_list
+// --- class ip_list
   ip_list::ip_list() : md_list()
     {
                 #if (MDIP_DEBUG > CFG_DEBUG_NONE)
                   SOUT(millis()); SOUT(" ip_list new");  SOUTHEXLN((u_long) this);
                 #endif
     }
-
   ip_list::~ip_list()
     {
       ip_cell* pip = NULL;
@@ -116,7 +107,6 @@
         }
                     //SOUT(millis()); SOUT(" ip_list deleted ");  SOUTHEXLN((u_long) this);
     }
-  //
   void ip_list::append(uint32_t locIP, uint32_t gwIP, uint32_t snIP, const char* ssid, const char* pw)
     {
       ip_cell* neu = new ip_cell();
@@ -130,7 +120,6 @@
             SOUT("  locIP "); SOUTHEX(neu->locIP()); SOUT("  ssid "); SOUTLN(stmp);
         #endif
     }
-
   ip_cell* ip_list::find(const char* ssid)
     {
       void*    ptmp = this->pFirst();
@@ -158,6 +147,5 @@
                           //SOUT(" exit find pCell "); SOUTHEX((u_long) ptmp); SOUT(" cell ssid "); SOUTLN(myname);
       return (ip_cell*) ptmp;
     }
-
 /* EOF */
 
