@@ -2,10 +2,6 @@
 #include <wire.h>
 #include <md_util.h>
 
-#ifdef USE_DICT_LIST
-    #include <dict_list.hpp>
-  #endif
-
 #ifndef DEBUG_MODE
     #define DEBUG_MODE CFG_DEBUG_STARTUP
   #endif // DEBUG_MODE

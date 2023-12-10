@@ -149,11 +149,11 @@
         //    || |||| |+     system / interface
         //    || |||| +      reserved
         //    || |||| ---- controller family
-        #define HW_DEF      0xFFFFu
+        #define HW_DEF      0x7FFFu
       // --- PW voltages        ||xx xxxx xxxx xxxx
-        #define MC_PW       0xc000u // mask for voltage
-        #define MC_PW_5V    0x8000u
-        #define MC_PW_3V3   0x4000u
+        #define MC_PW       0x3000u // mask for voltage
+        #define MC_PW_5V    0x2000u
+        #define MC_PW_3V3   0x1000u
 
       // --- HW types        xx|| xxxx xxxx xxxx
         #define MC_HW        0x3000u // mask for HW type
@@ -188,36 +188,35 @@
           #define  MC_ESP32_D1_MINI  MC_PW_3V3 + MC_UC_ESP32 + 0x0005
           //#define  MC_ESP32_AZTOUCH  MC_PW_3V3 + MC_UC_ESP32 + 0x0006
       // --- user output parts (MC_MOTY_UOUT)
-        // --- TFT displays
-          #define  MC_UO_TFT1602_I2C_XA    MC_PW_3V3 + MC_MOTY_UOUT + 0x0001u
-          #define  MC_UO_TFT1602_GPIO_RO   MC_PW_3V3 + MC_MOTY_UOUT + 0x0002u + MC_PW_5V // used by KEYPADSHIELD
-          #define  MC_UO_TXPT2046_AZ_SPI   MC_PW_3V3 + MC_MOTY_UOUT + 0x0003u   // used by Arduino-touch-case
-          #define  MC_UO_TXPT2046_AZ_UNO   MC_PW_3V3 + MC_MOTY_UOUT + 0x0004u   // used by Arduino-touch-case
-          #define  MC_UO_Keypad_ANA0_RO    MC_PW_3V3 + MC_MOTY_UOUT + 0x0005u + MC_PW_5V // used by KEYPADSHIELD
-          #define  MC_UO_TFT_GC9A01A_SPI   MC_PW_3V3 + MC_MOTY_UOUT + 0x0006u   // round display 240x240 16bit colors
-        // --- OLED displays I2C
+        // --- TFT displays ( 0x01u - 0x1F )
+          #define  MC_UO_TFT1602_I2C_XA    (MC_PW_3V3 + MC_MOTY_UOUT + 0x0001u           ) // 0x1401u
+          #define  MC_UO_TFT1602_GPIO_RO   (MC_PW_3V3 + MC_MOTY_UOUT + 0x0002u + MC_PW_5V) // 0x3402u used by KEYPADSHIELD
+          #define  MC_UO_TXPT2046_AZ_SPI   (MC_PW_3V3 + MC_MOTY_UOUT + 0x0003u           ) // 0x1403u used by Arduino-touch-case
+          #define  MC_UO_TXPT2046_AZ_UNO   (MC_PW_3V3 + MC_MOTY_UOUT + 0x0004u           ) // 0x1404u used by Arduino-touch-case
+          #define  MC_UO_Keypad_ANA0_RO    (MC_PW_3V3 + MC_MOTY_UOUT + 0x0005u + MC_PW_5V) // 0x3405u used by KEYPADSHIELD
+          #define  MC_UO_TFT_GC9A01A_SPI   (MC_PW_3V3 + MC_MOTY_UOUT + 0x0006u           ) // 0x1406u round display 240x240 16bit colors
+        // --- OLED displays I2C ( 0x21u - 0x3F )
       #ifdef USE_OLED_I2C
           #define  OLED_DRV_1106              1106
           #define  OLED_DRV_1306              1306
-          #define  MC_UO_OLED_066_AZ        MC_PW_3V3 + MC_MOTY_UOUT + 0x0005u // IIC adress 0x3C,0x3D solder switch
+          #define  MC_UO_OLED_066_AZ       (MC_PW_3V3 + MC_MOTY_UOUT + 0x0021) // 0x1421u IIC adress 0x3C,0x3D solder switch
             #define  OLED_066_GEO             GEO_64_48
             #define  OLED_066_DRV             OLED_DRV_1306
             #define  OLED_066_MAXCOLS         14  // ??
             #define  OLED_066_MAXROWS         4
 
-          #define  MC_UO_OLED_091_AZ        MC_PW_3V3 + MC_MOTY_UOUT + 0x0006u// IIC adress 0x3C
+          #define  MC_UO_OLED_091_AZ       (MC_PW_3V3 + MC_MOTY_UOUT + 0x0022) // 0x1422u IIC adress 0x3C
             #define  OLED_091_GEO             GEO_128_32
             #define  OLED_091_DRV             OLED_DRV_1306
             #define  OLED_091_MAXCOLS         30
             #define  OLED_091_MAXROWS         4
 
-          #define  MC_UO_OLED_096_AZ        MC_PW_3V3 + MC_MOTY_UOUT + 0x0007u
+          #define  MC_UO_OLED_096_AZ       (MC_PW_3V3 + MC_MOTY_UOUT + 0x0023) // 0x1423u
             #define  OLED_096_GEO             GEO_128_64
             #define  OLED_096_DRV             OLED_DRV_1306
             #define  OLED_096_MAXCOLS         30
             #define  OLED_096_MAXROWS         6
-
-          #define  MC_UO_OLED_130_AZ        MC_PW_3V3 + MC_MOTY_UOUT + 0x0008u
+          #define  MC_UO_OLED_130_AZ       (MC_PW_3V3 + MC_MOTY_UOUT + 0x0024) // 0x1424u
             #define  OLED_130_GEO             GEO_128_64
             #define  OLED_130_DRV             OLED_DRV_1106
             #define  OLED_130_MAXCOLS         30

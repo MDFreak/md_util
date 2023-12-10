@@ -1,6 +1,6 @@
 #include <md_util.h>
 #include <wire.h>
-#include <md_filter.hpp>
+#include <md_filter.h>
   /*
     // class md_val
     template<typename T>

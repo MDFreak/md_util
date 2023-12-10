@@ -1,10 +1,62 @@
+/*************************************************************************
+|* filename:   md_util.h
+ * project:    part of standard utilities
+ * author:     Martin DORFNER (MD)
+ * maintainer: Martin DORFNER
+ * email:      git@martin-dorfner.at
+ * Date:       10.12.2023
+ *-----------------------------------------------------------------------
+ * Function:
+ *   provide smal tools without creating a complete library
+ *-----------------------------------------------------------------------
+ * external dependancies:
+ *   TODO
+ *-----------------------------------------------------------------------
+ * internal dependancies:
+ *   - transfer C-type statement with make statement
+ *     TODO '#define USE_MD_LIST=1'
+ *     use VSCode/PlatformIO
+ *        -> 'platformio.h'
+ *           -> [env:<project_name>]
+ *                TODO build_flags = -D USE_MD_LIST=1
+ *   - md_defines.h  (utility intern)
+ *-----------------------------------------------------------------------
+ * state of coding:
+ *   - initial historic coding
+ *   - was well working before this system change
+ *   TODO  testing
+ *-----------------------------------------------------------------------
+ * Description:
+ *   TODO
+ * Implementation:
+ *   TODO
+ * goal is small footprint with high performance
+ ************************************************************************
+ * Version| Date   | Changes                                    | Author
+ *-----------------------------------------------------------------------
+ * 0.001  |10.12.23| import from former project                 | MD
+*-----------------------------------------------------------------------*/
+
 #ifndef _MD_UTIL_H_
   #define _MD_UTIL_H_
 
   #include <Arduino.h>
   #include <Wire.h>
-  #include <Time.h>
+  #ifdef USE_MD_DICT_LIST
+      #include <md_dict_list.h>
+    #endif // USE_MD_DICT_LIST
+  #ifdef USE_MD_IP_LIST
+      #include <md_ip_list.h>
+    #endif // USE_MD_IP_LIST
+  #ifdef USE_MD_LIST
+      #include <md_list.h>
+    #endif // USE_MD_LIST
+
+  #ifdef USE_UTIL_TIMER
+      #include <Time.h>
+    #endif // USE_UTIL_TIMER
   //#include <md_crc16.h>
+
   #include <md_defines.h>
   //--------------------------
   // binary / hex tools
@@ -24,22 +76,27 @@
       uint16_t md_modbus_crc(uint8_t buf[], int len);
   // --- scan I2C - serial output
     //uint8_t  scanI2C(uint8_t no, uint8_t start, uint8_t _stop, uint8_t sda, uint8_t scl);
-    uint8_t  scanI2C(TwoWire *i2c, uint8_t sda, uint8_t scl);
-  class msTimer
-    {
-      private:
-        uint64_t _tout;
-        uint64_t _tstart;
-      public:
-        msTimer();
-        msTimer(const uint64_t inTOut);
+    #ifdef USE_I2C
+        uint8_t  scanI2C(TwoWire *i2c, uint8_t sda, uint8_t scl);
+      #endif // USE_I2C
+  // --- md_timer
+    #ifdef USE_UTIL_TIMER
+        class msTimer
+          {
+            private:
+              uint64_t _tout;
+              uint64_t _tstart;
+            public:
+              msTimer();
+              msTimer(const uint64_t inTOut);
 
-        bool      TOut();
-        void      startT();
-        void      startT(const uint64_t inTOut);
-        uint64_t  getTact();
-        uint64_t  getTout();
-    };
+              bool      TOut();
+              void      startT();
+              void      startT(const uint64_t inTOut);
+              uint64_t  getTact();
+              uint64_t  getTout();
+          };
+      #endif // USE_UTIL_TIMER
   // class touchpin handling of touch pin function (ESP32, ESP8266)
 /*
     // C++ program to pass function as a
@@ -171,4 +228,4 @@
       //md_LEDPix24& operator=(uint32_t LEDPixel);
   };
  */
-#endif
+#endif // _MD_UTIL_H_

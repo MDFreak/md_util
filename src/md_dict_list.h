@@ -1,28 +1,47 @@
 /*************************************************************************
-|  Filename..............: dict_list.hpp
- * Project...............: part of standard utilities
- * Autor.................: Martin Dorfner (MD)
- * Date .................: 20.11.2020
+|* filename:   dict_list.h
+ * project:    part of standard utilities
+ * author:     Martin DORFNER (MD)
+ * maintainer: Martin DORFNER
+ * email:      git@martin-dorfner.at
+ * Date:       10.12.2023
  *-----------------------------------------------------------------------
- * Function:
+ * function:
  *   provide dictionary
  *-----------------------------------------------------------------------
- * Dependecies:
- *   md_defines.h    (utility intern)
- *   linked_list.hpp base class
+ * external dependancies:
+ *   - no external dependancies
+ *-----------------------------------------------------------------------
+ * dependancies:
+ *   - transfer C-type statement with make statement
+ *     - '#define USE_DICT_LIST=1'
+ *     use VSCode/PlatformIO
+ *        -> 'platformio.h'
+ *           -> [env:<project_name>]
+ *                build_flags = -D USE_DICT_LIST=1
+ *   - md_defines.h    (utility intern)
+ *   - md_list.h   base class
+ *-----------------------------------------------------------------------
+ * state of coding:
+ *   - initial historic coding
+ *   - state is unknown
+ *   TODO  testing
  ************************************************************************
  * Version| Date   | Changes                                    | Autor
  *-----------------------------------------------------------------------
- * 0.1.0  |20.11.20| import from former project                 | MD
+ * 0.001  |10.12.23| import from former project                 | MD
 *-----------------------------------------------------------------------*/
-#ifndef _DICT_LIST_HPP_
-  #define _DICT_LIST_HPP_
+#ifndef _MD_DICT_LIST_H_
+  #define _MD_DICT_LIST_H_
 
-  #ifdef USE_DICT_LIST
+  #ifdef USE_MD_DICT_LIST
       #include <stdlib.h>
       #include <Arduino.h>
       #include <md_defines.h>
-      #include <linked_list.hpp>
+      #ifndef USE_MD_LIST // integrate if not defined
+          #define USE_MD_LIST
+        #endif // USE_MD_LIST
+      #include <md_list.h>
       // --- dictionary classes dict_cell, dict_list
         class dict_cell : public md_cell
           {
@@ -61,7 +80,6 @@
             protected:
               dict_cell* _findCell(int16_t idx);
               dict_cell* _findCell(const char name[]);
-
           };
-    #endif // USE_DICT_LIST
-#endif // _DICT_LIST_HPP_
+    #endif // USE_MD_DICT_LIST
+#endif // _MD_DICT_LIST_H_

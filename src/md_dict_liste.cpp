@@ -15,8 +15,8 @@
  *-----------------------------------------------------------------------
  * 0.1.0  |20.11.20| import from former project                 | MD
 *-----------------------------------------------------------------------*/
-#ifdef USE_DICT_LIST
-  #include <dict_list.hpp>
+#ifdef USE_MD_DICT_LIST
+  #include <md_dict_list.h>
   // --- class dict_cell
     void dict_cell::init(int16_t idx, const char name[])
       {

@@ -17,8 +17,7 @@
 *-----------------------------------------------------------------------*/
 
 #ifdef USE_MD_LISTS
-
-    #include "linked_list.hpp"
+    #include "md_list.h"
 
     // --- class md_cell           /* Abstrakte Basisklasse fuer Listenelemente */
       md_cell::md_cell()
@@ -171,6 +170,8 @@
         }
     // --- class md_cell1           /* Abstrakte Basisklasse fuer Listenelemente */
     // --- class md_list1
+  #endif // USE_MD_LISTS
+#ifdef TODO_TEMPLATE_TYPE
     // --- class smal_list
       // --- constructor / destructor
         template<typename T>
@@ -623,6 +624,6 @@
 
             this->sorted = true;
           }
-  #endif // USE_MD_LISTS
+  #endif // TODO_TEMPLATE_TYPE
 /* EOF */
 
