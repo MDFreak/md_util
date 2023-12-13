@@ -236,40 +236,38 @@
     }
     #endif
 // --- class msTimer
-  #ifdef USE_UTIL_TIMER
-      msTimer::msTimer()
-        {
-          startT(0);
-        }
-      msTimer::msTimer(const uint64_t inTOut)
-        {
-          startT(inTOut);
-        }
-      bool msTimer::TOut()
-        {
-          if ((millis() - _tstart) > _tout)
-            return true;
-          else
-            return false;
-        }
-      void msTimer::startT()
-        {
-          _tstart = millis();
-        }
-      void msTimer::startT(const uint64_t inTOut)
-        {
-          _tstart = millis();
-          _tout   = inTOut;
-        }
-      uint64_t msTimer::getTact()
-        {
-          return millis() - _tstart ;
-        }
-      uint64_t msTimer::getTout()
-        {
-          return millis() - _tout ;
-        }
-    #endif // USE_UTIL_TIMER
+  msTimer::msTimer()
+    {
+      startT(0);
+    }
+  msTimer::msTimer(const uint64_t inTOut)
+    {
+      startT(inTOut);
+    }
+  bool msTimer::TOut()
+    {
+      if ((millis() - _tstart) > _tout)
+        return true;
+      else
+        return false;
+    }
+  void msTimer::startT()
+    {
+      _tstart = millis();
+    }
+  void msTimer::startT(const uint64_t inTOut)
+    {
+      _tstart = millis();
+      _tout   = inTOut;
+    }
+  uint64_t msTimer::getTact()
+    {
+      return millis() - _tstart ;
+    }
+  uint64_t msTimer::getTout()
+    {
+      return millis() - _tout ;
+    }
 // class touchpin TODO test
   #ifdef USE_TOUCHPIN
       void touchPin::init(bool isSwitch, uint8_t holdCnt, uint8_t limit)

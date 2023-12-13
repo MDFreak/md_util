@@ -52,9 +52,7 @@
       #include <md_list.h>
     #endif // USE_MD_LIST
 
-  #ifdef USE_UTIL_TIMER
-      #include <Time.h>
-    #endif // USE_UTIL_TIMER
+  #include <Time.h>
   //#include <md_crc16.h>
 
   #include <md_defines.h>
@@ -74,29 +72,27 @@
     // --- calculate CRC16  (modbus mode)
       uint16_t md_crc16_update (uint16_t crc, uint8_t a);
       uint16_t md_modbus_crc(uint8_t buf[], int len);
+  // --- md_timer
+      class msTimer
+        {
+          private:
+            uint64_t _tout;
+            uint64_t _tstart;
+          public:
+            msTimer();
+            msTimer(const uint64_t inTOut);
+
+            bool      TOut();
+            void      startT();
+            void      startT(const uint64_t inTOut);
+            uint64_t  getTact();
+            uint64_t  getTout();
+        };
   // --- scan I2C - serial output
     //uint8_t  scanI2C(uint8_t no, uint8_t start, uint8_t _stop, uint8_t sda, uint8_t scl);
     #ifdef USE_I2C
         uint8_t  scanI2C(TwoWire *i2c, uint8_t sda, uint8_t scl);
       #endif // USE_I2C
-  // --- md_timer
-    #ifdef USE_UTIL_TIMER
-        class msTimer
-          {
-            private:
-              uint64_t _tout;
-              uint64_t _tstart;
-            public:
-              msTimer();
-              msTimer(const uint64_t inTOut);
-
-              bool      TOut();
-              void      startT();
-              void      startT(const uint64_t inTOut);
-              uint64_t  getTact();
-              uint64_t  getTout();
-          };
-      #endif // USE_UTIL_TIMER
   // class touchpin handling of touch pin function (ESP32, ESP8266)
 /*
     // C++ program to pass function as a
