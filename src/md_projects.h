@@ -57,9 +57,9 @@
     #define PRJ_TEST_LIB_BME280   ESP32_TEST_MD_STDLIB + 2 // 258
     #define PRJ_TEST_LIB_TFT      ESP32_TEST_MD_STDLIB + 3 // 259
     #define PRJ_TEST_LIB_INA3221  ESP32_TEST_MD_STDLIB + 4 // 260
-    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 5
-    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
-    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
+    #define PRJ_TEST_LIB_FRAM     ESP32_TEST_MD_STDLIB + 5 // 261
+    #define PRJ_TEST_LIB_WLAN     ESP32_TEST_MD_STDLIB + 6 // 262
+    #define PRJ_TEST_LIB_WEBSERV  ESP32_TEST_MD_STDLIB + 7 // 263
     //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
     //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
     //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
