@@ -41,13 +41,10 @@
  * 0.001  |10.12.23| import from former project                 | MD
 *-----------------------------------------------------------------------*/
 
-#ifndef _MD_IP_LIST_H_
-  #define _MD_IP_LIST_H_
+#ifdef USE_MD_IP_LIST
+    #ifndef _MD_IP_LIST_H_
+      #define _MD_IP_LIST_H_
 
-  #ifdef USE_MD_IP_LIST
-      #ifndef USE_MD_LIST
-          #define USE_MD_LIST
-        #endif // USE_MD_LIST
       #include <md_list.h>
       #ifndef LOGINTXT_MAX_LEN
           #define LOGINTXT_MAX_LEN 30
@@ -90,8 +87,8 @@
             void append(uint32_t locIP, uint32_t gwIP, uint32_t snIP, const char* ssid, const char* pw);
             md_ip_cell* find(const char* ssid);
         };
-    #endif // USE_MD_IP_LIST
-#endif // _MD_IP_LIST_H_
+    #endif // _MD_IP_LIST_H_
+#endif // USE_MD_IP_LIST
 
 
 

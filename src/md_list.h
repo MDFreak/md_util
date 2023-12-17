@@ -49,7 +49,7 @@
 #ifndef _MD_LIST_H_
   #define _MD_LIST_H_
 
-  #ifdef USE_MD_LIST
+  #if defined(USE_MD_LIST) || defined(USE_IP_LIST) || defined(USE_DICT_LIST)
       #include <stdlib.h>
       //#include <Arduino.h>
       #include <md_defines.h>
@@ -57,18 +57,12 @@
       #define DICT_MAX_NAME_LEN 14
         //#define MD_CELL_TYPE_INT8  0
         //#define MD_CELL_TYPE_INT16 0
-      #define LL_DEBUG CFG_DEBUG_NONE
-        //#define LL_DEBUG CFG_DEBUG_STARTUP
-        //#define LL_DEBUG CFG_DEBUG_ACTIONS
-        //#define LL_DEBUG CFG_DEBUG_DETAILS
       enum OPOS_t
         {
           OFIRST = FALSE,      // function call
           OMAX   = 0x7FFFu, // = int16 max
           OLAST  = OMAX,
         };
-      #define MD_DEBUG          TRUE
-      #define DICT_DEBUG        TRUE
       // --- base classes md_cell, md_list
         class md_cell           /* Abstrakte Basisklasse fuer Listenelemente */
           {
@@ -80,7 +74,6 @@
             public:
               md_cell();
               ~md_cell();
-
               void*   pNext (void);
               void*   pPriv (void);
               void    pNext (void* pNext);
@@ -89,11 +82,9 @@
               void    index (uint8_t idx);
               void*   getobj(void);
               void    setobj(void* obj);
-
             private:
               void    init();
           };
-
         class md_list
           {
             protected:
@@ -101,11 +92,9 @@
               md_cell* _pLast  = NULL;
               uint16_t _count  = 0;
               uint8_t  _mode   = OBJDEF;
-
             public:
               md_list()  { _pFirst = _pLast = NULL; _count = 0; } // Konstruktor
               ~md_list() {}
-
               uint16_t count  ();
               uint8_t  mode   ();
               void     setmode(uint8_t newmode = OBJUSER);
@@ -116,11 +105,11 @@
               void*    pIndex (uint8_t idx);
               ret_t    add    (void*  pCell);
               ret_t    rem    (OPOS_t first = OFIRST);
-
             private:
               void     doIdx ();
           };
-    #endif // USE_MD_LIST
+    #endif // defined(USE_MD_LIST) || defined(USE_IP_LIST) || defined(USE_DICT_LIST)
+#endif // _MD_LIST_H_
   #ifdef TODO_TEMPLATE_TYPE
           // --- base classes md_cell1, md_list1
             template<typename T>
@@ -204,7 +193,7 @@
                                 }
                   ret_t    add    (T pCell)
                                 {
-                                            #if (LL_DEBUG > CFG_DEBUG_NONE)
+                                            #if (MD_LIST_DEBUG_MODE > CFG_DEBUG_NONE)
                                                 SOUT("   md_list1 before add: count ");
                                                 SOUT(_count);SOUT(" pFirst "); SOUTHEX((u_long) _pFirst); SOUT(" plast "); SOUTHEXLN((u_long) _pLast);
                                               #endif
@@ -224,7 +213,7 @@
                                         _pLast->index(_count);
                                         _count++;
                                       }
-                                            #if (LL_DEBUG > CFG_DEBUG_NONE)
+                                            #if (MD_LIST_DEBUG_MODE > CFG_DEBUG_NONE)
                                                 SOUT("   md_list1 after add: count ");
                                                 SOUT(_count);SOUT(" pFirst "); SOUTHEX((u_long) _pFirst); SOUT(" plast "); SOUTHEXLN((u_long) _pLast);
                                             #endif
@@ -362,4 +351,3 @@
                   virtual int binSearch(T obj, int lowerEnd, int upperEnd);
               };
     #endif // TODO_TEMPLATE_TYPE
-#endif // _MD_LIST_H_

@@ -16,9 +16,13 @@
  * 0.1.0  |20.11.20| import from former project                 | MD
 *-----------------------------------------------------------------------*/
 
-#ifdef USE_MD_LISTS
+#ifdef USE_MD_LIST
     #include "md_list.h"
-
+    #if defined(MD_LIST_DEBUG_MODE) && defined(DEBUG_MODE)
+        #define MD_LIST_DEBUG_MODE DEBUG_MODE
+      #else
+        #define MD_LIST_DEBUG_MODE CFG_DEBUG_NONE
+      #endif // defined(MD_LIST_DEBUG_MODE) && defined(DEBUG_MODE)
     // --- class md_cell           /* Abstrakte Basisklasse fuer Listenelemente */
       md_cell::md_cell()
                  {
