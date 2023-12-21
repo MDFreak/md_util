@@ -60,10 +60,10 @@
     #define PRJ_TEST_LIB_FRAM     ESP32_TEST_MD_STDLIB + 5 // 261
     #define PRJ_TEST_LIB_WIFI     ESP32_TEST_MD_STDLIB + 6 // 262
     #define PRJ_TEST_LIB_WEBSERV  ESP32_TEST_MD_STDLIB + 7 // 263
-    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
-    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
-    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
-    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
-    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
-    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 6
+    #define PRJ_TEST_LIB_ADC1115  ESP32_TEST_MD_STDLIB + 8 // 264
+    #define PRJ_TEST_LIB_PZEM017  ESP32_TEST_MD_STDLIB + 9 // 265
+    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 10
+    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 11
+    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 12
+    //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 13
 #endif
