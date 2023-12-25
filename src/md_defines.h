@@ -232,6 +232,12 @@
           #define  AOUT_PAS_BUZZ_3V5V      U_3V5V + 0x0001u  // used by Arduino-touch-case
     // **********************************************
     // --- configuration and HW spezific defines
+      // --- Serial devices
+      #ifndef NOTUSE_SER
+          #define DEV_SERTERM               0
+          #define DEV_SER1                  1
+          #define DEV_SER2                  2
+        #endif // NOTUSE_SER
       // --- I2C devices
       #ifdef USE_I2C
           #define  DEV_I2C1                 0           // I2C device 1
