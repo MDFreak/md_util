@@ -174,7 +174,7 @@
 
       uint8_t i = 0;
       uint8_t ec;
-              SOUTLN("Scanning I2C ");
+              //STXT("   ... scanning I2C ");
       if (i2c != NULL)
         {
           //TwoWire I2C = TwoWire(no-1);
@@ -183,9 +183,9 @@
               //SOUTLN(" I2C pins set");
           //printfI2C.begin(sda,scl,400000);
           i2c->begin((int) sda, (int) scl, (uint32_t) 80000); // 400000
-              STXT(" I2C begin ok");
+              //STXT(" I2C begin ok");
           #if (CFG_DEBUG_STARTUP > CFG_DEBUG_NONE)
-              STXT(" Scanning I2C Addresses 1-127");
+              STXT("   ... scanning I2C addr 1-127 ...");
             #endif
           //uint8_t cnt=0;
           for(i = 1; i < 127 ; i++)
@@ -199,38 +199,38 @@
                       switch (i)
                         {
 
-                          case I2C_OLED_3C:         SHEXVAL(" OLED ", i);         break;
-                          case I2C_OLED_3D:         SHEXVAL(" OLED ", i);         break;
-                          case I2C_HDC1080_HUM_40:  SHEXVAL(" HDC1080 ", i);      break;
-                          case I2C_INA3221_41:      SHEXVAL(" INA3221 ", i);      break;
-                          case I2C_INA3221_42:      SHEXVAL(" INA3221 ", i);      break;
-                          case I2C_INA3221_43:      SHEXVAL(" INA3221 ", i);      break;
-                          case I2C_ADS1115_48:      SHEXVAL(" ADS1115 ", i);      break;
-                          case I2C_ADS1115_49:      SHEXVAL(" ADS1115 ", i);      break;
-                          case I2C_ADS1115_4A:      SHEXVAL(" ADS1115 ", i);      break;
-                          case I2C_ADS1115_4B:      SHEXVAL(" ADS1115 ", i);      break;
-                          case I2C_FRAM_50:         SHEXVAL(" FRAM ", i);         break;
-                          case I2C_AT24C32_57:      SHEXVAL(" AT24C32 ", i);      break;
-                          case I2C_CCS811_AQ_5A:    SHEXVAL(" CCS811_AQ ", i);    break;
-                          case I2C_MLX90614_5B:     SHEXVAL(" MLX90614 ", i);     break;
-                          case I2C_SI1145_LQ_60:    SHEXVAL(" SI1145_LQ ", i);    break;
-                          case I2C_DS3231_RTC_68:   SHEXVAL(" DS3231_RTC ", i);   break;
-                          case I2C_BME280_76:       SHEXVAL(" BME280 ", i);       break;
-                          case I2C_BME680_77:       SHEXVAL(" BME680 ", i);       break;
-                          case I2C_OLED_78:         SHEXVAL(" OLED_78 ", i);      break;
-                          case I2C_OLED_7A:         SHEXVAL(" OLED_7A ", i);      break;
-                          case I2C_FRAM_7C:         SHEXVAL(" FRAM old addr ", i);break;
-                          default:                  SHEXVAL("unknown device ", i); break;
+                          case I2C_OLED_3C:         SHEXVAL("       OLED      ", i); break;
+                          case I2C_OLED_3D:         SHEXVAL("       OLED      ", i); break;
+                          case I2C_HDC1080_HUM_40:  SHEXVAL("       HDC1080   ", i); break;
+                          case I2C_INA3221_41:      SHEXVAL("       INA3221   ", i); break;
+                          case I2C_INA3221_42:      SHEXVAL("       INA3221   ", i); break;
+                          case I2C_INA3221_43:      SHEXVAL("       INA3221   ", i); break;
+                          case I2C_ADS1115_48:      SHEXVAL("       ADS1115   ", i); break;
+                          case I2C_ADS1115_49:      SHEXVAL("       ADS1115   ", i); break;
+                          case I2C_ADS1115_4A:      SHEXVAL("       ADS1115   ", i); break;
+                          case I2C_ADS1115_4B:      SHEXVAL("       ADS1115   ", i); break;
+                          case I2C_FRAM_50:         SHEXVAL("       FRAM      ", i); break;
+                          case I2C_AT24C32_57:      SHEXVAL("       AT24C32   ", i); break;
+                          case I2C_CCS811_AQ_5A:    SHEXVAL("       CCS811_AQ ", i); break;
+                          case I2C_MLX90614_5B:     SHEXVAL("       MLX90614  ", i); break;
+                          case I2C_SI1145_LQ_60:    SHEXVAL("       SI1145_LQ ", i); break;
+                          case I2C_DS3231_RTC_68:   SHEXVAL("       DS3231_RTC", i); break;
+                          case I2C_BME280_76:       SHEXVAL("       BME280    ", i); break;
+                          case I2C_BME680_77:       SHEXVAL("       BME680    ", i); break;
+                          case I2C_OLED_78:         SHEXVAL("       OLED_78   ", i); break;
+                          case I2C_OLED_7A:         SHEXVAL("       OLED_7A   ", i); break;
+                          case I2C_FRAM_7C:         SHEXVAL("       FRAM old  ", i); break;
+                          default:                  SHEXVAL("       other dev ", i); break;
                         }
                     #endif
                 }
             }
-          SOUTLN("device scan loop finshed");
+          STXT("       I2C scan finshed");
           i2c->end();
         }
       else
         {
-          SOUTLN("I2C device ID=0 is not allowed");
+          STXT("   ERR I2C device ID=0 is not allowed");
         }
       return i;
     }
