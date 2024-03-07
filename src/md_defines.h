@@ -245,7 +245,8 @@
           //#define  I2C_TFT1602_IIC_XA_3V3   U_3V3  + 0
           #define  I2C_OLED_3C              0x3C
           #define  I2C_OLED_3D              0x3D
-          #define  I2C_HDC1080_HUM_40       0x40
+          //#define  I2C_HDC1080_HUM_40       0x40
+          #define  I2C_INA3221_40           0x40
           #define  I2C_INA3221_41           0x41
           #define  I2C_INA3221_42           0x42
           #define  I2C_INA3221_43           0x43

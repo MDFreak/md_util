@@ -49,10 +49,10 @@
   *///++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   // workspace names in visual studio code - 0xww00
-    #define ESP32_TEST_MD_STDLIB    0x0100u
-    #define MD_TINYHOUSE_BLUETTI    0x0200u
+    #define ESP32_TEST_MD_STDLIB  0x0100u
+    #define ESP32_TINY_MD         0x0200u
 
-  //  test contained by workspace ESP32_TEST_MD_STDLIB - 0x**pp
+  // test contained by workspace ESP32_TEST_MD_STDLIB - 0x**pp
     #define PRJ_TEST_LIB_OLED     ESP32_TEST_MD_STDLIB + 1 // 257
     #define PRJ_TEST_LIB_BME280   ESP32_TEST_MD_STDLIB + 2 // 258
     #define PRJ_TEST_LIB_TFT      ESP32_TEST_MD_STDLIB + 3 // 259
@@ -66,4 +66,10 @@
     //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 11
     //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 12
     //#define PRJ_TEST_LIB_         ESP32_TEST_MD_STDLIB + 13
+
+  // project MD_TINYHOUE
+    #define PRJ_TINY_BASE_DEVKIT  ESP32_TINY_MD + 1        // 0x0201u = 513
+    #define PRJ_TINY_BLUE_DEVKIT  PRJ_TINY_BASE_DEVKIT + 1 // 0x0202u = 514
+    #define PRJ_TINY_BASE_MINI    ESP32_TINY_MD + 11       // 0x020bu = 523
+    #define PRJ_TINY_BASE_TOUCH   ESP32_TINY_MD + 21       // 0x021fu = 543
 #endif

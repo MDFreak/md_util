@@ -201,7 +201,8 @@
 
                           case I2C_OLED_3C:         SHEXVAL("       OLED      ", i); break;
                           case I2C_OLED_3D:         SHEXVAL("       OLED      ", i); break;
-                          case I2C_HDC1080_HUM_40:  SHEXVAL("       HDC1080   ", i); break;
+                          //case I2C_HDC1080_HUM_40:  SHEXVAL("       HDC1080   ", i); break;
+                          case I2C_INA3221_40:      SHEXVAL("       INA3221   ", i); break;
                           case I2C_INA3221_41:      SHEXVAL("       INA3221   ", i); break;
                           case I2C_INA3221_42:      SHEXVAL("       INA3221   ", i); break;
                           case I2C_INA3221_43:      SHEXVAL("       INA3221   ", i); break;
